@@ -7,12 +7,12 @@ const path = require('path')
 module.exports = {
   dev: {
 
-    // 路径
+    // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
 
-    // 开发服务器设置
+    // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8082, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
@@ -44,19 +44,19 @@ module.exports = {
   },
 
   build: {
-    // index.html的模板
+    // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 
-    // 路径
+    // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsSubDirectory: 'Attendance',
+    assetsPublicPath: './',
 
     /**
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
