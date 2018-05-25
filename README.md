@@ -8,7 +8,7 @@
 # 安装依赖关系
 npm install
 
-# 在localhost：8080进行热重新加载
+# 在localhost：8082进行热重新加载
 npm run dev
 
 # 打包压缩建立生产
