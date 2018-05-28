@@ -1,29 +1,12 @@
 <template>
-<!-- <mu-grid-list >
-  <mu-sub-header>图片展示</mu-sub-header>
-  <mu-raised-button label="Default">
-    <mu-grid-tile v-for="(tile,index) in list" :key="index">
+<mu-row class="panel-row">
+  <mu-col class="panel-col" width="50" tablet="50" desktop="50" v-for="(tile,index) in list" :key="index">
+    <mu-flat-button class="demo-flat-button">
       <img :src="tile.image" :alt="tile.title" />
-    </mu-grid-tile>
-  </mu-raised-button>
-</mu-grid-list> -->
-<div>
-  <mu-flexbox>
-    <mu-flexbox-item class="flex-demo" v-for="(tile,index) in list" :key="index">
-      <mu-flat-button  class="demo-flat-button">
-        <img :src="tile.image" :alt="tile.title"/>
-        <p>1</p>
-      </mu-flat-button>
-    </mu-flexbox-item>
-  </mu-flexbox>
-  <!-- <mu-row gutter>
-    <mu-col style="text-align:center" width="50" tablet="50" v-for="(tile,index) in list" :key="index">
-        <mu-flat-button class="demo-flat-button">
-          <img :src="tile.image" :alt="tile.title" style="display:block"/>
-        </mu-flat-button>
-    </mu-col>
-  </mu-row> -->
-</div>
+      <p>{{tile.title}}</p>
+    </mu-flat-button>
+  </mu-col>
+</mu-row>
 </template>
 
 <script>
@@ -46,27 +29,30 @@ export default {
 }
 </script>
 
-<style lang="css">
-/* .gridlist-demo{
-display: flex;
-flex-wrap: wrap;
-justify-content: space-around;
-} */
-.mt8 {
-  margin-top: 8px;
+<style lang="css" scoped>
+.panel-row > .panel-col{
+  padding: .2rem .4rem;
 }
-.flex-demo {
+.mu-flat-button-wrapper > img {
+  display: block;
+  width: 100%;
   text-align: center;
 }
-.demo-flat-button{
-  width: 3rem;
-  height:3rem;
+.panel-row > .panel-col > p {
+  width: 100%;
+  text-align: center;
 }
-.demo-flat-button img{
+.demo-flat-button {
+  -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.156863), 0 1px 5px rgba(0,0,0,.227451);
+  box-shadow: 0 1px 5px rgba(0,0,0,.156863), 0 1px 5px rgba(0,0,0,.227451);
+}
+.demo-flat-button{
   width: 100%;
   height: 100%;
+  padding: .6rem;
 }
-.mu-flat-button-wrapper{
-
+.mu-flat-button-wrapper >  p{
+  position: absolute;
+  bottom: 0;
 }
 </style>
