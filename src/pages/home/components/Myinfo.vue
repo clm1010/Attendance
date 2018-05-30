@@ -14,13 +14,11 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-.info-paper {
-  width: 100%;
-  margin-bottom:0.1rem;
-}
-.info-col{
-  padding: .1rem;
-  font-size: .3rem;
-}
+<style lang="stylus" scoped>
+  .info-paper
+    width: 100%;
+    margin-bottom:0.1rem;
+    .info-col
+      padding: .1rem;
+      font-size: .3rem;
 </style>

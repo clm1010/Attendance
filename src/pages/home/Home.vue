@@ -20,7 +20,4 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-  .my-info
-    background-color:#CCC
-</style>
+<style lang="stylus" scoped></style>

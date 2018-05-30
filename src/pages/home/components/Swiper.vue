@@ -15,7 +15,8 @@ export default {
     return {
       swiperOption: {
         pagination: '.swiper-pagination',
-        loop: true
+        loop: true,
+        autoplay: 3000
       },
       swiperList: [{
         id: '01',
@@ -35,15 +36,19 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-/* .wrapper >>> .swiper-pagination-bullet-active
-  background: red !important */
+@import '~@/assets/styles/varibles.styl'
+.wrapper >>> .swiper-pagination-bullet-active
+  background-color: $my-color1
 .swiper-container-horizontal > .swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction
-  bottom:0.2rem
+  bottom:0.2rem;
 .wrapper
-  overflow:hidden
-  width:100%
-  min-height:150px
+  overflow:hidden;
+  width:100%;
+  height: 0;
+  padding-bottom: 26.6666667%;
+  background-color: #EEEEEE;
   .swiper-img
-    width: 100%
-    min-height:150px
+    display: block;
+    width: 100%;
+    height: 100%;
 </style>

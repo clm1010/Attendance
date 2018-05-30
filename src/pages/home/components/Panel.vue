@@ -1,9 +1,9 @@
 <template>
 <mu-row class="panel-row">
-  <mu-col class="panel-col" width="50" tablet="50" desktop="50" v-for="(tile,index) in list" :key="index">
-    <mu-flat-button class="demo-flat-button">
-      <img :src="tile.image" :alt="tile.title" />
-      <p>{{tile.title}}</p>
+  <mu-col class="panel-col" width="50" tablet="50" desktop="50" v-for="(item,index) in list" :key="index">
+    <mu-flat-button class="panel-flat-button">
+      <img class="panel-img" :src="item.image" :alt="item.title" />
+      <p class="panel-title">{{item.title}}</p>
     </mu-flat-button>
   </mu-col>
 </mu-row>
@@ -29,30 +29,25 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-.panel-row > .panel-col{
-  padding: .2rem .4rem;
-}
-.mu-flat-button-wrapper > img {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-.panel-row > .panel-col > p {
-  width: 100%;
-  text-align: center;
-}
-.demo-flat-button {
-  -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.156863), 0 1px 5px rgba(0,0,0,.227451);
-  box-shadow: 0 1px 5px rgba(0,0,0,.156863), 0 1px 5px rgba(0,0,0,.227451);
-}
-.demo-flat-button{
-  width: 100%;
-  height: 100%;
-  padding: .6rem;
-}
-.mu-flat-button-wrapper >  p{
-  position: absolute;
-  bottom: 0;
-}
+<style lang="stylus" scoped>
+@import '~@/assets/styles/varibles.styl'
+  .panel-col
+    padding: 0;
+    border-right: .01rem solid $my-color2;
+    border-bottom: .01rem solid $my-color2;
+    .panel-flat-button
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      .panel-img
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: .6rem;
+      .panel-title
+        position: absolute;
+        right:0;
+        bottom: 0;
+        left: 0;
 </style>
