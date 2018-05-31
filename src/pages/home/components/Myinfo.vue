@@ -1,5 +1,5 @@
 <template>
-<mu-paper class="info-paper" :zDepth="2">
+<mu-paper class="info-paper"  :zDepth="1">
   <mu-row>
     <mu-col class="info-col" width="50" tablet="30" desktop="30">员工号:P003125736</mu-col>
     <mu-col class="info-col" width="50" tablet="30" desktop="30">员工姓名:张三</mu-col>
@@ -17,7 +17,6 @@ export default {
 <style lang="stylus" scoped>
   .info-paper
     width: 100%;
-    margin-bottom:0.1rem;
     .info-col
       padding: .1rem;
       font-size: .3rem;
