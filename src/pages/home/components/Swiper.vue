@@ -44,11 +44,12 @@ export default {
 .wrapper
   overflow:hidden;
   width:100%;
-  height: 0;
-  padding-bottom: 26.6666667%;
+  // // height: 0;
+  // padding-bottom: 26.666667%;
+  min-height: 3rem;
   background-color: #EEEEEE;
   .swiper-img
     display: block;
     width: 100%;
-    height: 100%;
+    min-height: 3rem;
 </style>

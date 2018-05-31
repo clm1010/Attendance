@@ -9,13 +9,13 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import './assets/styles/reset.css'
 import './assets/styles/border.css'
 import 'muse-ui/dist/muse-ui.css'
-import 'muse-ui/dist/theme-light.css'
+import 'muse-ui/dist/theme-light.min.css'
 import 'swiper/dist/css/swiper.min.css'
 import './assets/styles/material-icons.css'
 
-Vue.use(MuseUI)
 Vue.config.productionTip = false
 fastclick.attach(document.body)
+Vue.use(MuseUI)
 Vue.use(VueAwesomeSwiper)
 /* eslint-disable no-new */
 new Vue({

@@ -1,10 +1,10 @@
 <template>
 <mu-row class="panel-row">
   <mu-col class="panel-col" width="50" tablet="50" desktop="50" v-for="(item,index) in list" :key="index">
-    <mu-flat-button class="panel-flat-button">
+    <router-link tag="mu-flat-button" class="panel-flat-button" :to="item.path">
       <img class="panel-img" :src="item.image" :alt="item.title" />
       <p class="panel-title">{{item.title}}</p>
-    </mu-flat-button>
+    </router-link>
   </mu-col>
 </mu-row>
 </template>
@@ -15,14 +15,20 @@ export default {
   data () {
     return {
       list: [{
+        id: '001',
         image: require('@/assets/img/kj.png'),
-        title: '考勤管理'
+        title: '考勤管理',
+        path: '/attendance'
       }, {
+        id: '002',
         image: require('@/assets/img/sp.png'),
-        title: '审批管理'
+        title: '审批管理',
+        path: '/approval'
       }, {
+        id: '003',
         image: require('@/assets/img/cj.png'),
-        title: '常见问题'
+        title: '常见问题',
+        path: '/problems'
       }]
     }
   }
@@ -44,7 +50,7 @@ export default {
         display: block;
         width: 100%;
         height: 100%;
-        padding: .6rem;
+        padding: .8rem;
       .panel-title
         position: absolute;
         right:0;
