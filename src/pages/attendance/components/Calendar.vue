@@ -2,15 +2,17 @@
 <section class="wh_container">
   <div class="wh_content_all">
     <div class="wh_top_changge">
-      <li @click="PreMonth()">
+      <!-- <li @click="PreMonth()"> -->
+      <li>
         <div class="wh_jiantou1"></div>
       </li>
       <li class="wh_content_li">{{dateTop}}</li>
-      <li @click="NextMonth()">
+      <!-- <li @click="NextMonth()"> -->
+      <li>
         <div class="wh_jiantou2"></div>
       </li>
     </div>
-    <div class="wh_content">
+    <div class="wh_title">
       <div class="wh_content_item" v-for="tag in textTop" :key="tag.k">
         <div>
           {{tag.w}}
@@ -103,28 +105,35 @@ export default {
   methods: {
     setClass (data) {
       let obj = {}
+      // console.log(JSON.stringify(data))
       obj[data.markClassName] = data.markClassName
       return obj
     },
+    // 点击当前日
     clickDay: function (item, index) {
+      console.log(JSON.stringify(item))
       if (!(this.isHideOtherday && item.nextDayShow) && !item.dayHide) {
+        console.log(1)
         this.$emit('choseDay', item.date)
       }
-      if (item.otherMonth) {
-        item.otherMonth < 0 ? this.PreMonth(item.date) : this.NextMonth(item.date)
-      } else {
-        if (!(this.isHideOtherday && item.nextDayShow) && !item.dayHide) {
-          for (let i = 0; i < this.list.length; i++) {
-            if (i === index) {
-              this.list[i].isToday = true
-            } else {
-              this.list[i].isToday = false
-            }
-          }
-        }
-      }
+      // if (item.otherMonth) {
+      //   console.log(2)
+      //   item.otherMonth < 0 ? this.PreMonth(item.date) : this.NextMonth(item.date)
+      // } else {
+      //   if (!(this.isHideOtherday && item.nextDayShow) && !item.dayHide) {
+      //     for (let i = 0; i < this.list.length; i++) {
+      //       if (i === index) {
+      //         this.list[i].isToday = true
+      //       } else {
+      //         this.list[i].isToday = false
+      //       }
+      //     }
+      //   }
+      // }
     },
+    // 选择月份
     ChoseMonth: function (date, isChosedDay = true) {
+      console.log(123)
       date = this.dateFormat(date)
       this.myData = new Date(date)
       this.$emit('changeMonth', this.dateFormat(this.myData))
@@ -312,128 +321,108 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-  .wh_container {
+<style lang="stylus" scoped>
+  li
+    list-style-type: none;
+  .wh_container
     max-width:8.2rem;
     margin: auto;
-  }
-
-  li {
-    list-style-type: none;
-  }
-  .wh_content_all {
-
-    background-color: #71c7a5;
+  .wh_content_all
+    // background-color: #2196f3;
+    background-color: #FFF;
     width: 100%;
     overflow: hidden;
     padding-bottom: .4rem;
-  }
-
-  .wh_content {
+    .wh_top_changge
+      display: flex;
+      background-color: #2196f3;
+      li
+        cursor: pointer;
+        display: flex;
+        color: #FFF;
+        font-size: 0.36rem;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        height: 0.94rem;
+      .wh_content_li
+        cursor: auto;
+        flex: 2.5;
+      .wh_jiantou1
+        width: 0.24rem;
+        height: 0.24rem;
+        border-top: 2px solid #FFF;
+        border-left: 2px solid #FFF;
+        transform: rotate(-45deg);
+      .wh_jiantou2
+        width: 0.24rem;
+        height: 0.24rem;
+        border-top: 0.04rem solid #FFF;
+        border-right: 0.04rem solid #FFF;
+        transform: rotate(45deg);
+      .wh_jiantou1:active
+      .wh_jiantou2:active
+        border-color: #DDD;
+  .wh_title
+  .wh_content
     display: flex;
     flex-wrap: wrap;
-    padding-left: .2rem;
     width: 100%;
-  }
-
-  .wh_content:first-child .wh_content_item {
-    color: #ddd;
-    font-size: 16px;
-    height: 15%;
-    line-height: 15%;
-  }
-
-  .wh_content_item {
-    font-size: 0.32rem;;
-    width: 13.4%;
-    padding-bottom: 10.14%;
-    text-align: center;
-    color: #fff;
-    position: relative;
-  }
-
-  .wh_content_item div {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .wh_content_item li {
-    width: 0.74rem;
-    height: 0.74rem;
-    border-radius: 2rem;
-    line-height: 0.74rem;
-  }
-
-  @media screen and (min-width: 460px) {
-    .wh_content_item li:hover {
-      background: #71c7a5;
-      cursor: pointer
-    }
-  }
-
-  .wh_top_changge {
-    display: flex;
-  }
-
-  .wh_top_changge li {
-    cursor: pointer;
-    display: flex;
-    color: #fff;
-    font-size: 0.36rem;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    height: 0.94rem;
-  }
-
-  .wh_top_changge .wh_content_li {
-    cursor: auto;
-    flex: 2.5;
-  }
-
-  .wh_jiantou1 {
-    width: 0.24rem;
-    height: 0.24rem;
-    border-top: 2px solid #ffffff;
-    border-left: 2px solid #ffffff;
-    transform: rotate(-45deg);
-  }
-
-  .wh_jiantou1:active,
-  .wh_jiantou2:active {
-    border-color: #ddd;
-  }
-
-  .wh_content_item div .wh_isToday {
-    margin: auto;
-    background-color: #fff;
-    color: #51c597;
-    border-radius: 2rem;
-    text-align: center;
-  }
-
-  .wh_jiantou2 {
-    width: 0.24rem;
-    height: 0.24rem;
-    border-top: 0.04rem solid #ffffff;
-    border-right: 0.04rem solid #ffffff;
-    transform: rotate(45deg);
-  }
-
-  .wh_content_item div .wh_isMark {
-    margin: auto;
-    border-radius: 100px;
-    border: 1px solid blue;
-    z-index: 2;
-  }
-
-  .wh_content_item div .wh_nextDayShow {
-    color: #bfbfbf;
-  }
+  .wh_title
+    padding: .1rem 0 .2rem .2rem;
+    background-color: #2196f3;
+    .wh_content_item
+      color: #FFF;
+      font-size: 0.36rem;
+      width: 13.4%;
+      text-align: center;
+      // height: 15%;
+      // line-height: 15%;
+  .wh_content
+    padding: .1rem 0 0 .2rem;
+    .wh_content_item
+      font-size: 0.32rem;;
+      width: 13.4%;
+      padding-bottom: 10.14%;
+      text-align: center;
+      color: #2196f3;
+      position: relative;
+      div
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .wh_isToday
+          margin: auto;
+          background-color: #fff;
+          // color: #51c597;
+          border-radius: 2rem;
+          text-align: center;
+          position: relative;
+          &:after
+            content: " ";
+            position: absolute;
+            width: .1rem;
+            height: .1rem;
+            right: 0;
+            bottom:0;
+            left: 0;
+            margin:auto;
+            background-color: yellow;
+        .wh_isMark
+          margin: auto;
+          border-radius: 2rem;
+          border: 1px solid blue;
+          z-index: 2;
+        .wh_nextDayShow
+          color: #bfbfbf;
+      li
+        width: 0.74rem;
+        height: 0.74rem;
+        border-radius: 2rem;
+        line-height: 0.74rem;
 </style>

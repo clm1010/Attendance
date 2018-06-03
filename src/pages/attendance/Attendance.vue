@@ -1,13 +1,14 @@
 <template>
 <div>
   <attendance-header></attendance-header>
+  <!-- agoDayHide='1517483961'
+  futureDayHide='1536054400' -->
   <attendance-calendar
     ref="AttendanceCalendar"
     :markDateMore="arr"
     v-on:choseDay="clickDay"
     v-on:changeMonth="changeDate"
-    agoDayHide='1517483961'
-    futureDayHide='1536054400'
+
   ></attendance-calendar>
 </div>
 </template>
@@ -23,16 +24,17 @@ export default {
   },
   data () {
     return {
-      arr: [{
-        date: '2018-4-1',
-        className: 'mark1'
-      }, {
-        date: '2018-4-2',
-        className: 'mark1'
-      }, {
-        date: '2018-4-13',
-        className: 'mark2'
-      }]
+      // arr: [{
+      //   date: '2018-4-1',
+      //   className: 'mark1'
+      // }, {
+      //   date: '2018-4-2',
+      //   className: 'mark1'
+      // }, {
+      //   date: '2018-4-13',
+      //   className: 'mark2'
+      // }]
+      arr: []
     }
   },
   methods: {
@@ -55,6 +57,7 @@ export default {
   created () {
     function format (date, index) {
       date = new Date(date)
+      console.log(`${date.getFullYear()}-${date.getMonth() + 1}-${index}`)
       return `${date.getFullYear()}-${date.getMonth() + 1}-${index}`
     }
     this.arr = [{
@@ -66,6 +69,9 @@ export default {
     }, {
       date: format(new Date(), 13),
       className: 'mark2'
+    }, {
+      date: format(new Date(), 30),
+      className: 'mark2'
     }]
   }
 }
@@ -75,6 +81,8 @@ export default {
 .wh_container >>>
   .mark1
     background-color: red;
+    color: #FFF;
   .mark2
     background-color: blue;
+    color: #FFF;
 </style>
