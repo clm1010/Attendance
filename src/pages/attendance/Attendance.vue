@@ -3,7 +3,12 @@
   <attendance-header></attendance-header>
   <!-- agoDayHide='1517483961'
   futureDayHide='1536054400' -->
-  <attendance-calendar ref="AttendanceCalendar" :markDateMore="arr" v-on:choseDay="clickDay" v-on:changeMonth="changeDate"></attendance-calendar>
+  <attendance-calendar
+    ref="AttendanceCalendar"
+    :markDateMore="arr"
+    v-on:choseDay="clickDay"
+    v-on:changeMonth="changeDate"
+  ></attendance-calendar>
 </div>
 </template>
 
@@ -70,11 +75,12 @@ export default {
 }
 </script>
 
-<style>
-    .mark1 {
-        background-color: red;
-    }
-    .mark2 {
-        background-color: blue;
-    }
+<style lang="stylus" scoped>
+  .wh_container >>>
+    .mark1
+      background-color: red;
+      color:#FFF;
+    .mark2
+      background-color: blue;
+      color:#FFF;
 </style>
