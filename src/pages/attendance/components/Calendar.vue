@@ -85,7 +85,6 @@ export default {
   },
   mounted () {
     this.getList(this.myData)
-    console.log(JSON.stringify(this.list))
   },
   methods: {
     setClass (data) {
@@ -253,8 +252,7 @@ export default {
           id: num + i,
           date: nowTime,
           dayHide: new Date(nowTime).getTime() / 1000 < parseInt(this.agoDayHide) || new Date(nowTime).getTime() / 1000 > parseInt(this.futureDayHide),
-          nextDayShow: new Date(nowTime).getTime() >
-            new Date().getTime(),
+          nextDayShow: new Date(nowTime).getTime() > new Date().getTime(),
           otherMonth: -1
         })
       }
@@ -272,8 +270,7 @@ export default {
             id: i + 1,
             date: nextDate.getFullYear() + '/' + (nextDate.getMonth() + 1) + '/' + (i + 1),
             dayHide: new Date(nowTime).getTime() / 1000 < parseInt(this.agoDayHide) || new Date(nowTime).getTime() / 1000 > parseInt(this.futureDayHide),
-            nextDayShow: new Date(nowTime).getTime() >
-              new Date().getTime(),
+            nextDayShow: new Date(nowTime).getTime() > new Date().getTime(),
             otherMonth: 1
           })
         }

@@ -50,10 +50,10 @@ export default {
         display: block;
         width: 100%;
         height: 100%;
-        padding: .8rem;
+        padding: 1rem;
       .panel-title
         position: absolute;
         right:0;
-        bottom: 0;
+        bottom: .2rem;
         left: 0;
 </style>
