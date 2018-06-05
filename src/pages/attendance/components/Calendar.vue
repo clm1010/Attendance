@@ -83,6 +83,10 @@ export default {
   created () {
     this.myData = new Date()
   },
+  mounted () {
+    this.getList(this.myData)
+    console.log(JSON.stringify(this.list))
+  },
   methods: {
     setClass (data) {
       let obj = {}
@@ -280,9 +284,6 @@ export default {
       date = new Date(date)
       return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
     }
-  },
-  mounted () {
-    this.getList(this.myData)
   },
   watch: {
     markDate (val, oldVal) {
