@@ -13,13 +13,13 @@
     <h3>工时状态说明</h3>
     <mu-flexbox>
       <mu-flexbox-item class="hours-desc-flex-item">
-        <i class="mdui-icon material-icons">event_available</i><span>已批准工时</span>
+        <i class="mdui-icon material-icons">check</i><span>已批准工时</span>
       </mu-flexbox-item>
       <mu-flexbox-item class="hours-desc-flex-item">
-        <i class="mdui-icon material-icons">event_note</i><span>审批中工时</span>
+        <i class="mdui-icon material-icons">mail_outline</i><span>审批中工时</span>
       </mu-flexbox-item>
       <mu-flexbox-item class="hours-desc-flex-item">
-        <i class="mdui-icon material-icons">event_busy</i><span>被拒绝工时</span>
+        <i class="mdui-icon material-icons">clear</i><span>被拒绝工时</span>
       </mu-flexbox-item>
     </mu-flexbox>
   </section>
@@ -99,25 +99,36 @@ export default {
     .mark2
     .mark3
       position: relative;
-      &:after
-        content: ' ';
-        width: .15rem;
-        height: .15rem;
+      &:before
+        width: .1rem;
+        height: 0.02rem;
         position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
         margin: auto;
         border-radius: 2rem;
     .mark1
-      &:after
-          background-color: #51db51;
+      &:before
+          content: '\2714';
+          top:-0.25rem;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          color: #51db51;
     .mark2
-      &:after
-        background-color: #3f3fff;
+      &:before
+        content: '\2709';
+        top:-0.2rem;
+        right: 0;
+        bottom: 0;
+        left: -0.18rem;
+        color: #3f3fff;
     .mark3
-      &:after
-        background-color: #ff0400;
+      &:before
+        content: '\2716';
+        top:-0.2rem;
+        right: 0;
+        bottom: 0;
+        left: -0.15rem;
+        color: #ff0400;
   .working-hours-desc
     border-top: 1px solid $my-color2;
     padding: 0 .1rem;
