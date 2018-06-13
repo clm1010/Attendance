@@ -1,0 +1,20 @@
+{
+  "status": "0",
+  "msg": "",
+  "result": [{
+    "date": "2018-06-1",
+    "checkstatus": "1"
+  }, {
+    "date": "2018-06-02",
+    "checkstatus": "1"
+  }, {
+    "date": "2018-06-18",
+    "checkstatus": "2"
+  }, {
+    "date": "2018-06-27",
+    "checkstatus": "2"
+  }, {
+    "date": "2018-06-30",
+    "checkstatus": "3"
+  }]
+}

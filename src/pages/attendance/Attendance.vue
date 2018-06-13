@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import AttendanceHeader from './components/Header'
 import AttendanceCalendar from './components/Calendar'
 export default {
@@ -65,29 +66,40 @@ export default {
     demo () {
       // this.$refs.Calendar.ChoseMonth('2017-12-12',false); // 跳到12月12日 但是不选中12月12日
       this.$refs.Calendar.ChoseMonth('2017-12-12') // 跳到12月12日
+    },
+    getAttenDate () {
+      console.log(123)
+      axios.get('./static/mock/attendatelist.json').then(this.handleDate)
+    },
+    handelDate (arry) {
+      function format (date) {
+        date = new Date(date)
+        let index = date.getDate()
+        return `${date.getFullYear()}/${date.getMonth() + 1}/${index}`
+      }
+      for (let i = 0; i < arry.length; i++) {
+        arry[i].date = format(arry[i].date)
+        if (arry[i].checkstatus === '1') {
+          arry[i].className = 'mark1'
+        }
+        if (arry[i].checkstatus === '2') {
+          arry[i].className = 'mark2'
+        }
+        if (arry[i].checkstatus === '3') {
+          arry[i].className = 'mark3'
+        }
+      }
+      return arry
+    },
+    handleDate (res) {
+      if (res.data.status === '0' && res.data) {
+        this.arr = this.handelDate(res.data.result)
+        console.log(JSON.stringify(this.arr))
+      }
     }
   },
-  created () {
-    function format (date, index) {
-      date = new Date(date)
-      return `${date.getFullYear()}/${date.getMonth() + 1}/${index}`
-    }
-    this.arr = [{
-      date: format(new Date(), 1),
-      className: 'mark1'
-    }, {
-      date: format(new Date(), 2),
-      className: 'mark1'
-    }, {
-      date: format(new Date(), 13),
-      className: 'mark2'
-    }, {
-      date: format(new Date(), 15),
-      className: 'mark2'
-    }, {
-      date: format(new Date(), 30),
-      className: 'mark3'
-    }]
+  mounted () {
+    this.getAttenDate()
   }
 }
 </script>
