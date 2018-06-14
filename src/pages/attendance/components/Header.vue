@@ -1,7 +1,7 @@
 <template>
 <mu-appbar title="考勤管理">
   <mu-icon-button icon="chevron_left" slot="left" to="/" />
-  <!-- <mu-icon-button icon="check" slot="right"></mu-icon-button> -->
+  <mu-icon-button slot="right"></mu-icon-button>
 </mu-appbar>
 </template>
 

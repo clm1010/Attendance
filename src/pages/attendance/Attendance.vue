@@ -52,16 +52,17 @@ export default {
     }
   },
   methods: {
-    clickDay (data) {
-      console.log('选中了', data) // 选中某天
-      // this.$toast('选中了' + data)
+    clickDay (dateparams) {
+      console.log('选中了', dateparams) // 选中某天
+      this.$router.push({name: 'Addworkhour', params: { date: dateparams }})
+      // this.$toast('选中了' + dateparams)
     },
-    clickToday (data) {
-      console.log('跳到了本月', data) // 跳到了本月
+    clickToday (dateparams) {
+      console.log('跳到了本月', dateparams) // 跳到了本月
     },
-    changeDate (data) {
-      // this.$toast('切换到的月份为' + data)
-      console.log('左右点击切换月份', data) // 左右点击切换月份
+    changeDate (dateparams) {
+      // this.$toast('切换到的月份为' + dateparams)
+      console.log('左右点击切换月份', dateparams) // 左右点击切换月份
     },
     demo () {
       // this.$refs.Calendar.ChoseMonth('2017-12-12',false); // 跳到12月12日 但是不选中12月12日
