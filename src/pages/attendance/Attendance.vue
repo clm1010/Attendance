@@ -9,7 +9,7 @@
     v-on:choseDay="clickDay"
     v-on:changeMonth="changeDate"
   ></attendance-calendar>
-  <section class="working-hours-desc">
+  <div class="working-hours-desc">
     <h3>工时状态说明</h3>
     <mu-flexbox>
       <mu-flexbox-item class="hours-desc-flex-item">
@@ -22,7 +22,7 @@
         <i class="mdui-icon material-icons">clear</i><span>被拒绝工时</span>
       </mu-flexbox-item>
     </mu-flexbox>
-  </section>
+  </div>
 </div>
 </template>
 

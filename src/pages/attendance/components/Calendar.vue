@@ -1,5 +1,5 @@
 <template>
-<section class="wh_container">
+<div class="wh_container">
   <div class="wh_content_all">
     <div class="wh_top_changge">
       <li @click="PreMonth()">
@@ -42,7 +42,7 @@
       </div>
     </div>
   </div>
-</section>
+</div>
 </template>
 <script>
 export default {
