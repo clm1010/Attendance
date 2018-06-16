@@ -4,7 +4,6 @@
       hintText="项目名称"
       label="项目名称"
       :required="true"
-      @input=""
       icon="card_travel"
       labelFloat
       fullWidth
@@ -13,7 +12,6 @@
       v-model="workState"
       hintText="工作状态"
       label="工作状态"
-      @change="handleWorkState"
       icon="developer_board"
       labelFloat
       fullWidth
@@ -30,24 +28,17 @@
       v-model="askleaveTypes"
       hintText="请假类型"
       label="请假类型"
-      :required="true"
-      @input=""
       icon="developer_board"
       labelFloat
       fullWidth
+      @input="handleLeaveType"
     >
-      <mu-menu-item value="1" title="事假&调休假"/>
-      <mu-menu-item value="2" title="年假&福利假"/>
-      <mu-menu-item value="3" title="病假"/>
-      <mu-menu-item value="4" title="婚假"/>
-      <mu-menu-item value="5" title="产假"/>
-      <mu-menu-item value="6" title="其他"/>
+      <mu-menu-item v-for = "(item,index) in leaveTypeList" :value="item.value" :title="item.name" :key="index" />
     </mu-select-field>
     <mu-text-field
       hintText="工时"
       label="工时"
       :required="true"
-      @input=""
       icon="alarm_on"
       labelFloat
       fullWidth
@@ -56,7 +47,6 @@
       hintText="加班时间"
       label="加班时间"
       :required="true"
-      @input=""
       icon="alarm_add"
       labelFloat
       fullWidth
@@ -66,7 +56,6 @@
       label="工作内容"
       :required="true"
       multiLine
-      @input=""
       icon="content_paste"
       labelFloat
       fullWidth
@@ -75,7 +64,6 @@
       hintText="请假工时"
       label="请假工时"
       :required="true"
-      @input=""
       icon="alarm_off"
       labelFloat
       fullWidth
@@ -85,7 +73,6 @@
       label="工作内容"
       :required="true"
       multiLine
-      @input=""
       icon="content_paste"
       labelFloat
       fullWidth
@@ -96,15 +83,18 @@
 <script>
 export default {
   name: 'AddworkhoureTimesheet',
+  props: {
+    leaveTypeList: Array
+  },
   data () {
     return {
-      workState: '1',
+      workState: '',
       askleaveTypes: '1'
     }
   },
   methods: {
-    handleWorkState () {
-      console.log(this.workState);
+    handleLeaveType () {
+      console.log(this.askleaveTypes)
     }
   }
 }
