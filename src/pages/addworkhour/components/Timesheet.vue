@@ -89,13 +89,17 @@ export default {
   data () {
     return {
       workState: '',
-      askleaveTypes: '1'
+      askleaveTypes: ''
     }
   },
   methods: {
     handleLeaveType () {
       console.log(this.askleaveTypes)
     }
+  },
+  beforeUpdate () {
+    // 请假类型默认设置
+    this.askleaveTypes = '1'
   }
 }
 </script>

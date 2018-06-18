@@ -8,7 +8,7 @@
 <script>
 import AddworkhoureHeader from './components/Header'
 import AddworkhoureTimesheet from './components/Timesheet'
-import axios from 'axios/'
+import axios from 'axios'
 export default {
   name: 'Addworkhour',
   components: {
