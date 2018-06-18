@@ -3,10 +3,10 @@
     <mu-text-field
       hintText="项目名称"
       label="项目名称"
-      :required="true"
       icon="card_travel"
       labelFloat
       fullWidth
+      ref="xiangmu"
     />
     <mu-select-field
       v-model="workState"
@@ -15,14 +15,9 @@
       icon="developer_board"
       labelFloat
       fullWidth
+      @input="handleWorkStatus"
     >
-      <mu-menu-item value="1" title="正常"/>
-      <mu-menu-item value="2" title="新进场无工作包"/>
-      <mu-menu-item value="3" title="在场无工作包"/>
-      <mu-menu-item value="4" title="新入职未进场"/>
-      <mu-menu-item value="5" title="公司坐班"/>
-      <mu-menu-item value="6" title="项目间歇"/>
-      <mu-menu-item value="7" title="请假"/>
+      <mu-menu-item v-for = "(item,index) in workStatusList" :value="item.value" :title="item.name" :key="index" />
     </mu-select-field>
     <mu-select-field
       v-model="askleaveTypes"
@@ -81,25 +76,49 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'AddworkhoureTimesheet',
-  props: {
-    leaveTypeList: Array
-  },
   data () {
     return {
+      workStatusList: [],
+      leaveTypeList: [],
       workState: '',
       askleaveTypes: ''
     }
   },
   methods: {
+    getWorkStatus () {
+      axios.get('../../static/mock/workstatus.json').then(this.handleGetWorkStatus)
+    },
+    getLeaveType () {
+      axios.get('../../static/mock/leavetype.json').then(this.handleGetLeaveType)
+    },
+    // 工作状态
+    handleGetWorkStatus (res) {
+      if (res.data.status === '0' && res.data) {
+        this.workStatusList = res.data.result
+        console.log(JSON.stringify(this.workStatusList))
+      }
+    },
+    // 请假类型
+    handleGetLeaveType (res) {
+      if (res.data.status === '0' && res.data) {
+        this.leaveTypeList = res.data.result
+        console.log(JSON.stringify(this.leaveTypeList))
+      }
+    },
+    handleWorkStatus () {
+      console.log(this.workState)
+    },
     handleLeaveType () {
       console.log(this.askleaveTypes)
     }
   },
-  beforeUpdate () {
-    // 请假类型默认设置
-    this.askleaveTypes = '1'
+  mounted () {
+    this.getWorkStatus()
+    this.getLeaveType()
+    console.log('被创建')
   }
 }
 </script>
