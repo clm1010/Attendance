@@ -1,5 +1,5 @@
 <template>
-<form ref="addForm" :modle="timesheetObj" class="formCls"  method="post">
+<form ref="addForm" :modle="timesheetObj" class="formBody"  method="post">
   <mu-raised-button label="删除" class="demo-raised-button"  @click="handleDeleteTimesheetClick" primary/>
   <mu-card class="timesheet-card">
       <mu-select-field
@@ -26,36 +26,36 @@
         <mu-menu-item v-for = "(item,index) in workStatusList" :value="item.value" :title="item.name" :key="index" />
       </mu-select-field>
       <mu-text-field
+        v-model="timesheetObj.workHours"
         v-show="isShow"
         hintText="工时"
         label="工时"
-        :required="true"
         icon="alarm_on"
         labelFloat
         fullWidth
       />
       <mu-text-field
+        v-model="timesheetObj.overTime"
         v-show="isShow"
         hintText="加班时间"
         label="加班时间"
-        :required="true"
         icon="alarm_add"
         labelFloat
         fullWidth
       />
       <mu-text-field
+        v-model="timesheetObj.workContent"
         v-show="isShow"
         hintText="工作内容"
         label="工作内容"
-        :required="true"
         multiLine
         icon="content_paste"
         labelFloat
         fullWidth
       />
       <mu-select-field
-        v-show="!isShow"
         v-model="timesheetObj.askleaveTypes"
+        v-show="!isShow"
         hintText="请假类型"
         label="请假类型"
         icon="developer_board"
@@ -66,19 +66,19 @@
         <mu-menu-item v-for = "(item,index) in leaveTypeList" :value="item.value" :title="item.name" :key="index" />
       </mu-select-field>
       <mu-text-field
+        v-model="timesheetObj.leaveTime"
         v-show="!isShow"
         hintText="请假工时"
         label="请假工时"
-        :required="true"
         icon="alarm_off"
         labelFloat
         fullWidth
       />
       <mu-text-field
+        v-model="timesheetObj.leaveReason"
         v-show="!isShow"
         hintText="请假理由"
         label="请假理由"
-        :required="true"
         multiLine
         icon="content_paste"
         labelFloat
@@ -100,7 +100,16 @@ export default {
       leaveTypeList: [],
       // workState: '',
       // askleaveTypes: '',
-      timesheetObj: {}
+      timesheetObj: {
+        technologyPlatformType: '',
+        workState: '',
+        workHours: '',
+        overTime: '',
+        workContent: '',
+        askleaveTypes: '',
+        leaveTime: '',
+        leaveReason: ''
+      }
     }
   },
   methods: {
@@ -117,7 +126,6 @@ export default {
     handleGetTechnologyPlatformType (res) {
       if (res.data.status === '0' && res.data) {
         this.technologyPlatformList = res.data.result
-        console.log(JSON.stringify(this.technologyPlatformList))
         this.timesheetObj.technologyPlatformType = '1'
       }
     },
@@ -125,7 +133,6 @@ export default {
     handleGetWorkStatus (res) {
       if (res.data.status === '0' && res.data) {
         this.workStatusList = res.data.result
-        console.log(JSON.stringify(this.workStatusList))
         this.timesheetObj.workState = '1'
       }
     },
@@ -133,25 +140,32 @@ export default {
     handleGetLeaveType (res) {
       if (res.data.status === '0' && res.data) {
         this.leaveTypeList = res.data.result
-        console.log(JSON.stringify(this.leaveTypeList))
         this.timesheetObj.askleaveTypes = '1'
       }
     },
     // 监听技术平台类型input事件
     handleTechnologyPlatformType () {
-      console.log(this.timesheetObj.technologyPlatformType)
+      // console.log(this.timesheetObj.technologyPlatformType)
     },
     // 监听工作状态input事件
     handleWorkStatus () {
-      this.timesheetObj.workState === '7' ? this.isShow = false : this.isShow = true
-      console.log(this.timesheetObj.workState)
+      if (this.timesheetObj.workState === '7') {
+        this.isShow = false
+        this.timesheetObj.workHours = ''
+        this.timesheetObj.overTime = ''
+        this.timesheetObj.workContent = ''
+      } else {
+        this.isShow = true
+        this.timesheetObj.leaveTime = ''
+        this.timesheetObj.leaveReason = ''
+      }
     },
     // 监听请假类型input事件
     handleLeaveType () {
-      console.log(this.timesheetObj.askleaveTypes)
+      // console.log(this.timesheetObj.askleaveTypes)
     },
     handleDeleteTimesheetClick (event) {
-        this.$emit('deleteTimesheet', event.target.offsetParent.parentNode)
+      this.$emit('deleteTimesheet', event.target.offsetParent.parentNode)
     }
   },
   mounted () {
@@ -159,11 +173,6 @@ export default {
     this.getWorkStatus()
     this.getLeaveType()
     console.log('被创建')
-  },
-  activated () {
-    this.getTechnologyPlatform()
-    this.getWorkStatus()
-    this.getLeaveType()
   }
 }
 </script>
@@ -172,5 +181,5 @@ export default {
   .mu-popover >>> .mu-menu-item-title
     color:red;
   .timesheet-card
-    margin:.2rem;
+    margin:.4rem .2rem;
 </style>
