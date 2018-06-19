@@ -69,7 +69,6 @@ export default {
       this.$refs.Calendar.ChoseMonth('2017-12-12') // 跳到12月12日
     },
     getAttenDate () {
-      console.log(123)
       axios.get('./static/mock/attendatelist.json').then(this.handleDate)
     },
     handelDate (arry) {
@@ -100,6 +99,9 @@ export default {
     }
   },
   mounted () {
+    this.getAttenDate()
+  },
+  activated () {
     this.getAttenDate()
   }
 }

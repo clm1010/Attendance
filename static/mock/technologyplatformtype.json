@@ -1,0 +1,29 @@
+{
+  "status": "0",
+  "msg": "",
+  "result": [{
+    "id": "16",
+    "typeId": "jishupingtai",
+    "typeName": "技术平台类型",
+    "value": "1",
+    "name": "新型智能",
+    "status": "1",
+    "remark": null
+  }, {
+    "id": "17",
+    "typeId": "jishupingtai",
+    "typeName": "技术平台类型",
+    "value": "2",
+    "name": "开放平台",
+    "status": "1",
+    "remark": null
+  }, {
+    "id": "18",
+    "typeId": "jishupingtai",
+    "typeName": "技术平台类型",
+    "value": "3",
+    "name": "测试",
+    "status": "1",
+    "remark": null
+  }]
+}
