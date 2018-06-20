@@ -4,6 +4,9 @@
     <mu-icon-button icon="chevron_left" slot="left" to="/attendance" />
     <mu-icon-button icon="check" slot="right" @click="handleSubmit"></mu-icon-button>
   </mu-appbar>
+  <mu-paper class="current-date" :zDepth="2">
+    <h2>当前日期&nbsp;&nbsp;{{currentDate}}</h2>
+  </mu-paper>
   <addworkhoure-timesheet
     v-for="(item,index) in addTimesheetList"
     :key="index"
@@ -31,6 +34,7 @@ export default {
   },
   data () {
     return {
+      currentDate: '',
       addTimesheetList: [],
       submitAllTimesheetList: []
     }
@@ -58,23 +62,34 @@ export default {
     }
   },
   mounted () {
+    this.currentDate = this.$route.params.date
+    this.currentDate = this.currentDate.replace(/\//g, '-')
+    console.log(this.currentDate)
     this.addTimesheetList = []
     this.handleAddTimesheet('AddworkhoureTimesheet')
-    console.log(this.$refs.addTimesheet)
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-.mu-appbar >>> .mu-appbar-title
+@import '~@/assets/styles/varibles.styl'
+  .mu-appbar >>> .mu-appbar-title
+      text-align: center;
+  .addtimes-button
     text-align: center;
-.addtimes-button
-  text-align: center;
-  .mu-float-button
-    width: 2rem;
-    height: 2rem;
-.formBody
-  &:first-of-type
-    >>> .demo-raised-button
-      display: none;
+    .mu-float-button
+      width: 2rem;
+      height: 2rem;
+  .current-date
+    display:block;
+    width: 80%;
+    margin: .1rem auto;
+    text-align: center;
+    font-size:.4rem;
+    background-color: $bgColor;
+    color: #FFF;
+  .formBody
+    &:first-of-type
+      >>> .demo-raised-button
+        display: none;
 </style>
