@@ -145,7 +145,7 @@ export default {
     },
     // 监听技术平台类型input事件
     handleTechnologyPlatformType () {
-      // console.log(this.timesheetObj.technologyPlatformType)
+      console.log(this.timesheetObj.technologyPlatformType)
     },
     // 监听工作状态input事件
     handleWorkStatus () {
