@@ -1,16 +1,19 @@
 <template>
 <div>
   <approval-header></approval-header>
-
   <v-table
     is-horizontal-resize style="width:100%"
     :columns="columns"
     :table-data="tableData"
     :column-cell-class-name="columnCellClass"
     :select-all="handleTableSelectAll"
+    :select-change="handleTableSelectChange"
+    :select-group-change="handleTableSelectGroupChange"
+    :show-vertical-border="false"
     @on-custom-comp="customCompFunc"
   ></v-table>
-  <button type="button" name="button" @click="handleLink">跳转</button>
+  <mu-raised-button label="审批通过" class="demo-raised-button" @click="handleApprovalPassed" primary/>
+  <mu-raised-button label="跳转" @click="handleLink" primary/>
 </div>
 </template>
 
@@ -24,6 +27,7 @@ export default {
   },
   data () {
     return {
+      approvalPassedTableData: [],
       tableData: [{
         'month': '5月份',
         'name': '张三',
@@ -125,13 +129,22 @@ export default {
       }
     },
     handleTableSelectAll (selection) {
-      console.log('选择全部', selection)
+      console.log('选择全部', JSON.stringify(selection))
+    },
+    handleTableSelectChange (selection, rowData) {
+      console.log('select-change', JSON.stringify(selection), JSON.stringify(rowData))
+    },
+    handleTableSelectGroupChange (selection) {
+      console.log('select-group-change', selection)
     },
     // 设置单元格样式名称
     columnCellClass (rowIndex, columnName, rowData) {
       if (rowIndex % 2) {
         return 'column-cell-class-name-two'
       }
+    },
+    handleApprovalPassed () {
+
     },
     handleLink () {
       this.$router.push({
