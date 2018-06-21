@@ -8,12 +8,16 @@
     :column-cell-class-name="columnCellClass"
     :select-all="handleTableSelectAll"
     :select-change="handleTableSelectChange"
-    :select-group-change="handleTableSelectGroupChange"
     :show-vertical-border="false"
-    @on-custom-comp="customCompFunc"
+    @on-custom-comp="handleClickEventDetails"
   ></v-table>
-  <mu-raised-button label="审批通过" class="demo-raised-button" @click="handleApprovalPassed" primary/>
-  <mu-raised-button label="跳转" @click="handleLink" primary/>
+      <!-- :select-group-change="handleTableSelectGroupChange" -->
+  <mu-flexbox class="flexbox-btn-approved" orient="vertical">
+    <mu-flexbox-item>
+      <mu-raised-button label="审批通过" icon="check" class="btn-approved" @click="handleApprovalPassed" primary />
+    </mu-flexbox-item>
+  </mu-flexbox>
+  <mu-toast v-if="toast" message="请选择一行数据" @close="hideToast"/>
 </div>
 </template>
 
@@ -27,8 +31,10 @@ export default {
   },
   data () {
     return {
+      toast: false,
       approvalPassedTableData: [],
       tableData: [{
+        'id': '001',
         'month': '5月份',
         'name': '张三',
         'reportdays': '5天',
@@ -36,14 +42,16 @@ export default {
         'unsubmitteddays': '0天',
         'auditeddays': '0天'
       }, {
-        'month': '5月份',
+        'id': '002',
+        'month': '6月份',
         'name': '张三',
         'reportdays': '5天',
         'submitteddays': '5天',
         'unsubmitteddays': '0天',
         'auditeddays': '0天'
       }, {
-        'month': '5月份',
+        'id': '003',
+        'month': '7月份',
         'name': '张三',
         'reportdays': '5天',
         'submitteddays': '5天',
@@ -118,41 +126,57 @@ export default {
     }
   },
   methods: {
-    customCompFunc (params) {
-      console.log(params)
-      // do delete operation
-      if (params.type === 'delete') {
-        this.$delete(this.tableData, params.index)
-        // do edit operation
-      } else if (params.type === 'edit') {
-        alert(`行号：${params.index} 姓名：${params.rowData['name']}`)
-      }
-    },
     handleTableSelectAll (selection) {
-      console.log('选择全部', JSON.stringify(selection))
+      this.approvalPassedTableData = selection
+      console.log('选择全部', JSON.stringify(this.approvalPassedTableData))
     },
     handleTableSelectChange (selection, rowData) {
-      console.log('select-change', JSON.stringify(selection), JSON.stringify(rowData))
+      this.approvalPassedTableData = selection
+      console.log('选择更改', JSON.stringify(this.approvalPassedTableData))
     },
-    handleTableSelectGroupChange (selection) {
-      console.log('select-group-change', selection)
-    },
+    // handleTableSelectGroupChange (selection) {
+    //   console.log('选择组更改', JSON.stringify(selection))
+    // },
     // 设置单元格样式名称
     columnCellClass (rowIndex, columnName, rowData) {
       if (rowIndex % 2) {
         return 'column-cell-class-name-two'
       }
     },
+    // 审批通过
     handleApprovalPassed () {
-
-    },
-    handleLink () {
-      this.$router.push({
-        name: 'ApprovalPersonalDetails',
-        params: {
-          userid: '001'
+      if (this.approvalPassedTableData.length === 0) {
+        this.toast = true
+        if (this.toastTimer) {
+          clearTimeout(this.toastTimer)
         }
-      })
+        this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
+        return false
+      }
+      console.log('审批通过的数据: ', JSON.stringify(this.approvalPassedTableData))
+    },
+    hideToast () {
+      this.toast = false
+      if (this.toastTimer) clearTimeout(this.toastTimer)
+    },
+    // 处理表格点击详情事件
+    handleClickEventDetails (params) {
+      console.log(params)
+      if (params.type === 'details') {
+        this.$router.push({
+          name: 'ApprovalPersonalDetails',
+          params: {
+            userid: params.rowData
+          }
+        })
+      }
+      // // do delete operation
+      // if (params.type === 'delete') {
+      //   this.$delete(this.tableData, params.index)
+      //   // do edit operation
+      // } else if (params.type === 'edit') {
+      //   alert(`行号：${params.index} 姓名：${params.rowData['name']}`)
+      // }
     }
   },
   mounted () {}
@@ -176,21 +200,21 @@ Vue.component('table-operation', {
     update () {
       // 参数根据业务场景随意构造
       let params = {
-        type: 'edit',
+        type: 'details',
         index: this.index,
         rowData: this.rowData
       }
       this.$emit('on-custom-comp', params)
-    },
-
-    deleteRow () {
-      // 参数根据业务场景随意构造
-      let params = {
-        type: 'delete',
-        index: this.index
-      }
-      this.$emit('on-custom-comp', params)
     }
+    // ,
+    // deleteRow () {
+    //   // 参数根据业务场景随意构造
+    //   let params = {
+    //     type: 'delete',
+    //     index: this.index
+    //   }
+    //   this.$emit('on-custom-comp', params)
+    // }
   }
 })
 </script>
@@ -207,4 +231,17 @@ Vue.component('table-operation', {
     text-align: center;
     color: #FFF;
     background-color: $bgColor;
+  .mu-toast
+
+    text-align:center;
+    background-color:rgba(33,150,240,.8);
+    right:0;
+    left:0;
+    margin:auto;
+    bottom:2rem;
+    width:4rem;
+  .flexbox-btn-approved
+    text-align:right;
+    .btn-approved
+      margin:.2rem .1rem;
 </style>
