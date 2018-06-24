@@ -31,7 +31,6 @@
     @on-custom-comp="handleClickEventDetails"
     :paging-index="(pageIndex-1)*pageSize"
   ></v-table>
-  <div class="mt20 mb20 bold"></div>
   <v-pagination
     @page-change="pageChange"
     @page-size-change="pageSizeChange"
@@ -156,28 +155,24 @@ export default {
     },
     handleGetApprovalTableData (res) {
       if (res.data.status === '0' && res.data) {
-        this.tableConfig.tableData = res.data.result
-        this.total = this.tableConfig.tableData.length
-        this.handleApprovalTableData()
+        let tableDataList = res.data.result
+        this.total = tableDataList.length
+        this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
       }
-      // this.tableConfig.tableData = this.tableConfig.tableData.slice((this.pageIndex-1)*this.pageSize, (this.pageIndex)*this.pageSize)
-    },
-    handleApprovalTableData () {
-      var table = this.tableConfig.tableData.slice((this.pageIndex-1)*this.pageSize, (this.pageIndex)*this.pageSize)
-      console.log(table)
     },
     pageChange (pageIndex) {
       console.log(pageIndex)
-      console.log(pageIndex)
-       this.pageIndex = pageIndex
-       this.getApprovalTableData()
+      this.approvalPassedTableData = []
+      this.pageIndex = pageIndex
+      this.getApprovalTableData()
     },
     pageSizeChange (pageSize) {
       console.log(pageSize)
+      this.approvalPassedTableData = []
       this.pageIndex = 1
       this.pageSize = pageSize
       this.getApprovalTableData()
-   },
+    },
     // handleTableSelectGroupChange (selection) {
     //   console.log('选择组更改', JSON.stringify(selection))
     // },
@@ -300,9 +295,10 @@ Vue.component('table-operation', {
   .mu-dropDown-menu
     flex: 1;
     color:red;
-    // border: 1px solid rgba(33,150,240,.6);
     height: .8rem;
     font-size: .3rem;
+  .mu-menu-list
+    border: 1px solid $bgColor;
   .mu-dropDown-menu-text
     padding:0 0;
     line-height:.7rem;

@@ -4,7 +4,7 @@
   "result": [
     {
       "id": "001",
-      "month": "5月份",
+      "month": "5月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -12,7 +12,7 @@
       "auditeddays": "0天"
     }, {
       "id": "002",
-      "month": "6月份",
+      "month": "6月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -20,7 +20,7 @@
       "auditeddays": "0天"
     }, {
       "id": "003",
-      "month": "7月份",
+      "month": "7月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -28,7 +28,7 @@
       "auditeddays": "0天"
     }, {
       "id": "004",
-      "month": "8月份",
+      "month": "8月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -36,15 +36,7 @@
       "auditeddays": "0天"
     }, {
       "id": "005",
-      "month": "9月份",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "005",
-      "month": "10月份",
+      "month": "9月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -52,7 +44,7 @@
       "auditeddays": "0天"
     }, {
       "id": "006",
-      "month": "10月份",
+      "month": "10月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -60,7 +52,7 @@
       "auditeddays": "0天"
     }, {
       "id": "007",
-      "month": "10月份",
+      "month": "10月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -68,7 +60,7 @@
       "auditeddays": "0天"
     }, {
       "id": "008",
-      "month": "11月份",
+      "month": "10月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -76,7 +68,7 @@
       "auditeddays": "0天"
     }, {
       "id": "009",
-      "month": "11月份",
+      "month": "11月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -84,7 +76,7 @@
       "auditeddays": "0天"
     }, {
       "id": "010",
-      "month": "11月份",
+      "month": "11月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -92,7 +84,7 @@
       "auditeddays": "0天"
     }, {
       "id": "011",
-      "month": "12月份",
+      "month": "11月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -100,7 +92,7 @@
       "auditeddays": "0天"
     }, {
       "id": "012",
-      "month": "12月份",
+      "month": "12月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -108,7 +100,7 @@
       "auditeddays": "0天"
     }, {
       "id": "013",
-      "month": "12月份",
+      "month": "12月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -116,7 +108,7 @@
       "auditeddays": "0天"
     }, {
       "id": "014",
-      "month": "1月份",
+      "month": "12月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -124,7 +116,7 @@
       "auditeddays": "0天"
     }, {
       "id": "015",
-      "month": "2月份",
+      "month": "1月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -132,7 +124,7 @@
       "auditeddays": "0天"
     }, {
       "id": "016",
-      "month": "3月份",
+      "month": "2月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -140,7 +132,7 @@
       "auditeddays": "0天"
     }, {
       "id": "017",
-      "month": "4月份",
+      "month": "3月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -148,7 +140,7 @@
       "auditeddays": "0天"
     }, {
       "id": "018",
-      "month": "5月份",
+      "month": "4月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -156,7 +148,7 @@
       "auditeddays": "0天"
     }, {
       "id": "019",
-      "month": "6月份",
+      "month": "5月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -164,15 +156,15 @@
       "auditeddays": "0天"
     }, {
       "id": "020",
-      "month": "7月份",
+      "month": "6月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
       "unsubmitteddays": "0天",
       "auditeddays": "0天"
     }, {
-      "id": "020",
-      "month": "8月份",
+      "id": "021",
+      "month": "7月",
       "name": "张三",
       "reportdays": "5天",
       "submitteddays": "5天",
@@ -180,8 +172,16 @@
       "auditeddays": "0天"
     }, {
       "id": "022",
-      "month": "9月份",
+      "month": "8月",
       "name": "张三",
+      "reportdays": "5天",
+      "submitteddays": "5天",
+      "unsubmitteddays": "0天",
+      "auditeddays": "0天"
+    }, {
+      "id": "023",
+      "month": "9月",
+      "name": "李四",
       "reportdays": "5天",
       "submitteddays": "5天",
       "unsubmitteddays": "0天",
