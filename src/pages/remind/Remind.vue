@@ -3,8 +3,9 @@
     <remind-header></remind-header>
     <mu-list class="remind-list">
       <mu-radio label="邮件提醒"
-      name="group" nativeValue="1"
-      v-model="value"
+      name="group"
+      nativeValue="1"
+      v-model="remind"
       class="demo-radio"
       @input="handleRemind"
       />
@@ -12,9 +13,8 @@
       label="微信提醒"
       name="group"
       nativeValue="2"
-      v-model="value"
+      v-model="remind"
       class="demo-radio"
-      @input="handleRemind"
       />
     </mu-list>
   </div>
@@ -29,12 +29,12 @@ export default {
   },
   data () {
     return {
-      value: '1'
+      remind: '1'
     }
   },
   methods: {
-    handleRemind () {
-      console.log(this.value)
+    handleRemind (e) {
+      console.log(this.remind)
     }
   }
 }
