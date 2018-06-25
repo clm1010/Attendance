@@ -100,10 +100,11 @@ export default {
   },
   mounted () {
     this.getAttenDate()
-  },
-  activated () {
-    this.getAttenDate()
   }
+  // ,
+  // activated () {
+  //   this.getAttenDate()
+  // }
 }
 </script>
 
@@ -115,35 +116,37 @@ export default {
     .mark3
       position: relative;
       &:before
-        width: .1rem;
-        height: 0.02rem;
+        width: .5rem;
+        height: .5rem;
         position: absolute;
         margin: auto;
-        border-radius: 2rem;
+        background-position: center center;
+        background-repeat: no-repeat;
+        content: ' ';
     .mark1
       &:before
-          content: '\2714';
-          top:-0.25rem;
+          top: .4rem;
           right: 0;
           bottom: 0;
-          left: 0;
-          color: #51db51;
+          left: .1rem;
+          background-image: url('~@/assets/img/check.png');
+          background-size: 100% 100%;
     .mark2
       &:before
-        content: '\2709';
-        top:-0.2rem;
+        top: .55rem;
         right: 0;
         bottom: 0;
-        left: -0.18rem;
-        color: #3f3fff;
+        left: 0;
+        background-image: url('~@/assets/img/mail.png');
+        background-size: 90% 90%;
     .mark3
       &:before
-        content: '\2716';
-        top:-0.2rem;
+        top: .55rem;
         right: 0;
         bottom: 0;
-        left: -0.15rem;
-        color: #ff0400;
+        left: 0;
+        background-image: url('~@/assets/img/reject.png');
+        background-size: 80% 80%;
   .working-hours-desc
     border-top: 1px solid $my-color2;
     padding: 0 .1rem;

@@ -1,66 +1,65 @@
 <template>
   <div>
     <approval-personal-details-header></approval-personal-details-header>
-    <mu-card>
-      <form ref="addForm" :modle="personalDetailsObj" class="formBody" @submit.prevent="handleSubmit">
-        <mu-text-field
-          v-model="personalDetailsObj.date"
-          v-show="isShow"
-          hintText="日期"
-          label="日期"
-          multiLine
-          icon="access_time"
-          labelFloat
-          fullWidth
-          disabled
-        />
-        <mu-text-field
-          v-model="personalDetailsObj.projectname"
-          v-show="isShow"
-          hintText="项目名称"
-          label="项目名称"
-          multiLine
-          icon="card_travel"
-          labelFloat
-          fullWidth
-          disabled
-        />
-        <mu-text-field
-          v-model="personalDetailsObj.normaltile"
-          v-show="isShow"
-          hintText="工时"
-          label="工时"
-          multiLine
-          icon="alarm_on"
-          labelFloat
-          fullWidth
-          disabled
-        />
-        <mu-text-field
-          v-model="personalDetailsObj.overworktime"
-          v-show="isShow"
-          hintText="加班工时"
-          label="加班工时"
-          multiLine
-          icon="alarm_add"
-          labelFloat
-          fullWidth
-        />
-        <mu-text-field
-          v-model="personalDetailsObj.workContent"
-          v-show="isShow"
-          hintText="工作内容"
-          label="工作内容"
-          multiLine
-          icon="content_paste"
-          labelFloat
-          fullWidth
-          disabled
-        />
-        <mu-raised-button type="submit" label="通过" class="demo-raised-button" primary/>
-        <mu-raised-button type="submit" label="拒绝" class="demo-raised-button" secondary/>
-      </form>
-    </mu-card>
+    <form ref="personalDetailsForm" :modle="personalDetailsObj" class="formBody" @submit.prevent="handleSubmit">
+      <mu-card class="personal-details-card">
+          <mu-text-field
+            v-model="personalDetailsObj.date"
+            v-show="isShow"
+            hintText="日期"
+            label="日期"
+            icon="access_time"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.projectname"
+            v-show="isShow"
+            hintText="项目名称"
+            label="项目名称"
+            icon="card_travel"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.normaltile"
+            v-show="isShow"
+            hintText="工时"
+            label="工时"
+            icon="alarm_on"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.overworktime"
+            v-show="isShow"
+            hintText="加班工时"
+            label="加班工时"
+            icon="alarm_add"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.workContent"
+            v-show="isShow"
+            hintText="工作内容"
+            label="工作内容"
+            multiLine
+            icon="content_paste"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-card-actions class="personal-details-footer">
+            <mu-raised-button type="submit" label="通过" class="demo-raised-button" primary/>
+            <mu-raised-button type="submit" label="拒绝" class="demo-raised-button" secondary/>
+          </mu-card-actions>
+      </mu-card>
+    </form>
   </div>
 </template>
 
@@ -95,4 +94,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .personal-details-card
+    margin:.2rem;
+    .personal-details-footer
+      text-align: center;
 </style>
