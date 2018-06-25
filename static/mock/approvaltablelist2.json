@@ -1,0 +1,37 @@
+{
+  "status": "0",
+  "msg": "",
+  "result": [{
+      "id": "001",
+      "date": "5月",
+      "name": "张三",
+      "projectname": "2017年平安财产保险股份有限公司技术服务协议",
+      "normaltile": "8",
+      "overworktime": "0"
+    },
+    {
+      "id": "002",
+      "date": "5月",
+      "name": "张三",
+      "projectname": "2017年平安财产保险股份有限公司技术服务协议",
+      "normaltile": "8",
+      "overworktime": "0"
+    },
+    {
+      "id": "003",
+      "date": "5月",
+      "name": "张三",
+      "projectname": "2017年平安财产保险股份有限公司技术服务协议",
+      "normaltile": "8",
+      "overworktime": "0"
+    },
+    {
+      "id": "004",
+      "date": "5月",
+      "name": "张三",
+      "projectname": "2017年平安财产保险股份有限公司技术服务协议",
+      "normaltile": "8",
+      "overworktime": "0"
+    }
+  ]
+}

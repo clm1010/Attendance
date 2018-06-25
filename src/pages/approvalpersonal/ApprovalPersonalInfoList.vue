@@ -1,24 +1,6 @@
 <template>
 <div>
-  <approval-header></approval-header>
-  <div class="search-approval">
-    <mu-dropDown-menu menuClass="menuClass" autoWidth  :value="monthValue"  @change="handleMonthChange">
-      <mu-menu-item value="1" title="一月"/>
-      <mu-menu-item value="2" title="二月"/>
-      <mu-menu-item value="3" title="三月"/>
-      <mu-menu-item value="4" title="四月"/>
-      <mu-menu-item value="5" title="五月"/>
-      <mu-menu-item value="6" title="六月"/>
-      <mu-menu-item value="7" title="七月"/>
-      <mu-menu-item value="8" title="八月"/>
-      <mu-menu-item value="9" title="九月"/>
-      <mu-menu-item value="10" title="十月"/>
-      <mu-menu-item value="11" title="十一月"/>
-      <mu-menu-item value="12" title="十二月"/>
-    </mu-dropDown-menu>
-    <mu-text-field class="approval-search-text" hintText="请输入搜索内容"/>
-    <mu-raised-button label="查询" class="approval-search-button" primary/>
-  </div>
+  <approval-personal-header></approval-personal-header>
   <v-table
     is-horizontal-resize style="width:100%"
     :columns="tableConfig.columns"
@@ -37,10 +19,10 @@
     :page-size="pageSize"
     :layout="['total', 'prev', 'pager', 'next', 'sizer']"
   ></v-pagination>
-      <!-- :select-group-change="handleTableSelectGroupChange" -->
   <mu-flexbox class="flexbox-btn-approval" orient="vertical">
     <mu-flexbox-item>
       <mu-raised-button label="审批通过" icon="check" class="btn-approval" @click="handleApprovalPassed" primary />
+      <mu-raised-button label="审批拒绝" icon="close" class="btn-approval" @click="handleApprovalReject" secondary />
     </mu-flexbox-item>
   </mu-flexbox>
   <mu-toast v-if="toast" message="请选择一行数据" @close="hideToast"/>
@@ -50,22 +32,20 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import ApprovalHeader from './components/Header'
+import ApprovalPersonalHeader from './components/Header'
 export default {
-  name: 'Approval',
+  name: 'ApprovalPersonalInfoList',
   components: {
-    ApprovalHeader
+    ApprovalPersonalHeader
   },
   data () {
     return {
-      monthValue: '1',
       toast: false,
-      approvalPassedTableData: [],
       total: 0,
       pageIndex: 1,
       pageSize: 10,
+      approvalPersonalInfoTableList: [],
       tableConfig: {
-        multipleSort: false,
         tableData: [],
         columns: [{
           width: 1,
@@ -75,8 +55,8 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'month',
-          title: '月份',
+          field: 'date',
+          title: '日期',
           width: 10,
           titleAlign: 'center',
           columnAlign: 'center',
@@ -91,33 +71,25 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'reportdays',
-          title: '申报天数',
+          field: 'projectname',
+          title: '项目',
+          width: 15,
+          titleAlign: 'center',
+          columnAlign: 'center',
+          isResize: true,
+          titleCellClassName: 'title-cell-class-header'
+        }, {
+          field: 'normaltile',
+          title: '工时',
           width: 10,
           titleAlign: 'center',
           columnAlign: 'center',
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'submitteddays',
-          title: '已提交天数',
-          width: 14,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          isResize: true,
-          titleCellClassName: 'title-cell-class-header'
-        }, {
-          field: 'unsubmitteddays',
-          title: '未提交天数',
-          width: 14,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          isResize: true,
-          titleCellClassName: 'title-cell-class-header'
-        }, {
-          field: 'auditeddays',
-          title: '已审核天数',
-          width: 14,
+          field: 'overworktime',
+          title: '加班工时',
+          width: 15,
           titleAlign: 'center',
           columnAlign: 'center',
           isResize: true,
@@ -136,54 +108,47 @@ export default {
     }
   },
   methods: {
-    // 处理监听日期框
-    handleMonthChange (value) {
-      this.monthValue = value
-      console.log(this.monthValue)
+    // 获取审批个人信息列表
+    getApprovalPersonalInfoTableData () {
+      axios.get('../../static/mock/approvaltablelist2.json').then(this.handleGetApprovalPersonalInfoTableData)
     },
-    handleTableSelectAll (selection) {
-      this.approvalPassedTableData = selection
-      console.log('选择全部', JSON.stringify(this.approvalPassedTableData))
-    },
-    handleTableSelectChange (selection, rowData) {
-      this.approvalPassedTableData = selection
-      console.log('选择更改', JSON.stringify(this.approvalPassedTableData))
-    },
-    getApprovalTableData () {
-      axios.get('../../static/mock/approvaltablelist.json').then(this.handleGetApprovalTableData)
-    },
-    handleGetApprovalTableData (res) {
+    handleGetApprovalPersonalInfoTableData (res) {
       if (res.data.status === '0' && res.data) {
         let tableDataList = res.data.result
         this.total = tableDataList.length
         this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
       }
     },
-    pageChange (pageIndex) {
-      console.log(pageIndex)
-      this.approvalPassedTableData = []
-      this.pageIndex = pageIndex
-      this.getApprovalTableData()
+    handleTableSelectAll (selection) {
+      this.approvalPersonalInfoTableList = selection
+      console.log('选择全部', JSON.stringify(this.approvalPersonalInfoTableList))
     },
-    pageSizeChange (pageSize) {
-      console.log(pageSize)
-      this.approvalPassedTableData = []
-      this.pageIndex = 1
-      this.pageSize = pageSize
-      this.getApprovalTableData()
+    handleTableSelectChange (selection, rowData) {
+      this.approvalPersonalInfoTableList = selection
+      console.log('选择更改', JSON.stringify(this.approvalPersonalInfoTableList))
     },
-    // handleTableSelectGroupChange (selection) {
-    //   console.log('选择组更改', JSON.stringify(selection))
-    // },
     // 设置单元格样式名称
     columnCellClass (rowIndex, columnName, rowData) {
       if (rowIndex % 2) {
         return 'column-cell-class-name-two'
       }
     },
+    pageChange (pageIndex) {
+      console.log(pageIndex)
+      this.approvalPersonalInfoTableList = []
+      this.pageIndex = pageIndex
+      this.getApprovalPersonalInfoTableData()
+    },
+    pageSizeChange (pageSize) {
+      console.log(pageSize)
+      this.approvalPersonalInfoTableList = []
+      this.pageIndex = 1
+      this.pageSize = pageSize
+      this.getApprovalPersonalInfoTableData()
+    },
     // 审批通过
     handleApprovalPassed () {
-      if (this.approvalPassedTableData.length === 0) {
+      if (this.approvalPersonalInfoTableList.length === 0) {
         this.toast = true
         if (this.toastTimer) {
           clearTimeout(this.toastTimer)
@@ -191,7 +156,19 @@ export default {
         this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
         return false
       }
-      console.log('审批通过的数据: ', JSON.stringify(this.approvalPassedTableData))
+      console.log('审批通过的数据: ', JSON.stringify(this.approvalPersonalInfoTableList))
+    },
+    // 审批拒绝
+    handleApprovalReject () {
+      if (this.approvalPersonalInfoTableList.length === 0) {
+        this.toast = true
+        if (this.toastTimer) {
+          clearTimeout(this.toastTimer)
+        }
+        this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
+        return false
+      }
+      console.log('审批通过的数据: ', JSON.stringify(this.approvalPersonalInfoTableList))
     },
     hideToast () {
       this.toast = false
@@ -202,23 +179,16 @@ export default {
       console.log(params)
       if (params.type === 'details') {
         this.$router.push({
-          name: 'ApprovalPersonalInfoList',
+          name: 'ApprovalPersonalDetails',
           params: {
-            personnelinfo: params.rowData
+            personaldetailsid: params.rowData
           }
         })
       }
-      // // do delete operation
-      // if (params.type === 'delete') {
-      //   this.$delete(this.tableData, params.index)
-      //   // do edit operation
-      // } else if (params.type === 'edit') {
-      //   alert(`行号：${params.index} 姓名：${params.rowData['name']}`)
-      // }
     }
   },
   mounted () {
-    this.getApprovalTableData()
+    this.getApprovalPersonalInfoTableData()
   }
 }
 
@@ -246,15 +216,6 @@ Vue.component('table-operation', {
       }
       this.$emit('on-custom-comp', params)
     }
-    // ,
-    // deleteRow () {
-    //   // 参数根据业务场景随意构造
-    //   let params = {
-    //     type: 'delete',
-    //     index: this.index
-    //   }
-    //   this.$emit('on-custom-comp', params)
-    // }
   }
 })
 </script>

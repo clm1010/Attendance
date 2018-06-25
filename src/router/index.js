@@ -4,7 +4,8 @@ import Home from '@/pages/home/Home'
 import Attendance from '@/pages/attendance/Attendance'
 import Addworkhour from '@/pages/addworkhour/Addworkhour'
 import Approval from '@/pages/approval/Approval'
-import ApprovalPersonalDetails from '@/pages/approvalpersonal/ApprovalPersonalDetails'
+import ApprovalPersonalInfoList from '@/pages/approvalpersonal/ApprovalPersonalInfoList'
+import ApprovalPersonalDetails from '@/pages/approvalpersonaldetails/ApprovalPersonalDetails'
 import Problems from '@/pages/problems/Problems'
 
 Vue.use(Router)
@@ -27,7 +28,12 @@ export default new Router({
       component: Approval
     },
     {
-      path: '/approvalpersonaldetails/:userid',
+      path: '/approvalpersonalinfolist/:personnelinfo',
+      name: 'ApprovalPersonalInfoList',
+      component: ApprovalPersonalInfoList
+    },
+    {
+      path: '/approvalpersonaldetails/:personaldetailsid',
       name: 'ApprovalPersonalDetails',
       component: ApprovalPersonalDetails
     },

@@ -1,13 +1,13 @@
 <template>
-  <mu-appbar title="审批个人详细列表">
-    <mu-icon-button icon="chevron_left" slot="left" to="/approval" />
+  <mu-appbar title="审批个人详细信息">
+    <mu-icon-button icon="chevron_left" slot="left" to="/approvalpersonalinfolist" />
     <mu-icon-button slot="right"></mu-icon-button>
   </mu-appbar>
 </template>
 
 <script>
 export default {
-  name: 'ApprovalPersonalHeader',
+  name: 'ApprovalPersonalDetailsHeader',
   data () {
     return {}
   }
