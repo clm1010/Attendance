@@ -12,7 +12,7 @@
         fullWidth
         @input="handleTechnologyPlatformType"
       >
-        <mu-menu-item v-for = "(item,index) in technologyPlatformList" :value="item.value" :title="item.name" :key="index" />
+      <mu-menu-item v-for = "(item,index) in technologyPlatformList" :value="item.value" :title="item.name" :key="index" />
       </mu-select-field>
       <mu-select-field
         v-model="timesheetObj.workState"
@@ -23,7 +23,7 @@
         fullWidth
         @input="handleWorkStatus"
       >
-        <mu-menu-item v-for = "(item,index) in workStatusList" :value="item.value" :title="item.name" :key="index" />
+      <mu-menu-item v-for = "(item,index) in workStatusList" :value="item.value" :title="item.name" :key="index" />
       </mu-select-field>
       <mu-text-field
         v-model="timesheetObj.workHours"

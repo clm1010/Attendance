@@ -26,6 +26,11 @@ export default {
         path: '/approval'
       }, {
         id: '003',
+        image: require('@/assets/img/tx.png'),
+        title: '提醒',
+        path: '/remind'
+      }, {
+        id: '004',
         image: require('@/assets/img/cj.png'),
         title: '常见问题',
         path: '/problems'

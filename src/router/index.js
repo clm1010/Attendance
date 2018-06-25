@@ -7,6 +7,7 @@ import Approval from '@/pages/approval/Approval'
 import ApprovalPersonalInfoList from '@/pages/approvalpersonal/ApprovalPersonalInfoList'
 import ApprovalPersonalDetails from '@/pages/approvalpersonaldetails/ApprovalPersonalDetails'
 import Problems from '@/pages/problems/Problems'
+import Remind from '@/pages/remind/Remind'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
       path: '/problems',
       name: 'Problems',
       component: Problems
+    },
+    {
+      path: '/remind',
+      name: 'Remind',
+      component: Remind
     },
     {
       path: '/addworkhour/:date',
