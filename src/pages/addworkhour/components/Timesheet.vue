@@ -90,6 +90,7 @@
 
 <script>
 import axios from 'axios'
+import $ from 'jquery'
 export default {
   name: 'AddworkhoureTimesheet',
   data () {
@@ -114,6 +115,30 @@ export default {
   },
   methods: {
     getTechnologyPlatform () {
+      var postdata = '<?xml version=\'1.0\' encoding=\'utf-8\'?>'
+      postdata += '<soap:Envelope  xmlns:soap=\'http://schemas.xmlsoap.org/soap/envelope/\'>'
+      postdata += '<soap:Body><m:queryWorkState xmlns:m=\'http://webservice.attence.com/\'>'
+      postdata += '</m:queryWorkState></soap:Body>'
+      postdata += '</soap:Envelope>'
+      console.log(JSON.stringify(postdata))
+      $.ajax({
+        url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+        type: 'POST',
+        dataType: 'text',
+        contentType: 'application/text;charset=utf-8',
+        data: postdata,
+        success: function (result) {
+          alert(result)
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          // 状态码
+          console.log(XMLHttpRequest.status)
+          // 状态
+          console.log(XMLHttpRequest.readyState)
+          // 错误信息
+          console.log(textStatus)
+        }
+      })
       axios.get('../../static/mock/technologyplatformtype.json').then(this.handleGetTechnologyPlatformType)
     },
     getWorkStatus () {
