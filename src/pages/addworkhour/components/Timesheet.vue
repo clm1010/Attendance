@@ -121,24 +121,36 @@ export default {
       postdata += '</m:queryWorkState></soap:Body>'
       postdata += '</soap:Envelope>'
       console.log(JSON.stringify(postdata))
-      $.ajax({
+      axios({
+        method: 'POST',
         url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
-        type: 'POST',
-        dataType: 'text',
-        contentType: 'application/text;charset=utf-8',
-        data: postdata,
-        success: function (result) {
-          alert(result)
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-          // 状态码
-          console.log(XMLHttpRequest.status)
-          // 状态
-          console.log(XMLHttpRequest.readyState)
-          // 错误信息
-          console.log(textStatus)
+        headers: { 'content-type': 'application/text; charset=utf-8' },
+        data: postdata
+      }).then(function (response) {
+        if (response.data.indexOf("<String>")) {
+          
         }
+      }).catch(function (error) {
+        console.log(error)
       })
+      // $.ajax({
+      //   url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+      //   type: 'POST',
+      //   dataType: 'text',
+      //   contentType: 'application/text;charset=utf-8',
+      //   data: postdata,
+      //   success: function (result) {
+      //     console.log(JSON.stringify(result))
+      //   },
+      //   error: function (XMLHttpRequest, textStatus, errorThrown) {
+      //     // 状态码
+      //     console.log(XMLHttpRequest.status)
+      //     // 状态
+      //     console.log(XMLHttpRequest.readyState)
+      //     // 错误信息
+      //     console.log(textStatus)
+      //   }
+      // })
       axios.get('../../static/mock/technologyplatformtype.json').then(this.handleGetTechnologyPlatformType)
     },
     getWorkStatus () {
