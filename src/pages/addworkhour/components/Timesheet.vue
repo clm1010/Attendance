@@ -126,9 +126,16 @@ export default {
         url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
         headers: { 'content-type': 'application/text; charset=utf-8' },
         data: postdata
-      }).then(function (response) {
-        if (response.data.indexOf("<String>")) {
-          
+      }).then(function (res) {
+        console.log(res.data)
+        if (res.data.indexOf("<String>")) {
+          let newData = res.data.slice((res.data.indexOf('<String>')+8),res.data.lastIndexOf('</String>'))
+          // var sss = JSON.stringify(newData)
+          var acbd =  eval("(" + newData + ")")
+          console.log(acbd.rows)
+
+          // var bbb = sss.replace(/\\/g,"")
+
         }
       }).catch(function (error) {
         console.log(error)
@@ -161,6 +168,7 @@ export default {
     },
     // 技术平台类型
     handleGetTechnologyPlatformType (res) {
+      console.log(typeof res)
       if (res.data.status === '0' && res.data) {
         this.technologyPlatformList = res.data.result
         this.timesheetObj.technologyPlatformType = '1'
