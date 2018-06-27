@@ -221,7 +221,7 @@ Vue.component('table-operation', {
 })
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import '~@/assets/styles/varibles.styl'
   .title-cell-class-header
      background-color: $bgColor;

@@ -90,7 +90,6 @@
 
 <script>
 import axios from 'axios'
-import $ from 'jquery'
 export default {
   name: 'AddworkhoureTimesheet',
   data () {
@@ -115,31 +114,28 @@ export default {
   },
   methods: {
     getTechnologyPlatform () {
-      var postdata = '<?xml version=\'1.0\' encoding=\'utf-8\'?>'
-      postdata += '<soap:Envelope  xmlns:soap=\'http://schemas.xmlsoap.org/soap/envelope/\'>'
-      postdata += '<soap:Body><m:queryWorkState xmlns:m=\'http://webservice.attence.com/\'>'
-      postdata += '</m:queryWorkState></soap:Body>'
-      postdata += '</soap:Envelope>'
-      console.log(JSON.stringify(postdata))
-      axios({
-        method: 'POST',
-        url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
-        headers: { 'content-type': 'application/text; charset=utf-8' },
-        data: postdata
-      }).then(function (res) {
-        console.log(res.data)
-        if (res.data.indexOf("<String>")) {
-          let newData = res.data.slice((res.data.indexOf('<String>')+8),res.data.lastIndexOf('</String>'))
-          // var sss = JSON.stringify(newData)
-          var acbd =  eval("(" + newData + ")")
-          console.log(acbd.rows)
-
-          // var bbb = sss.replace(/\\/g,"")
-
-        }
-      }).catch(function (error) {
-        console.log(error)
-      })
+      axios.get('../../static/mock/technologyplatformtype.json').then(this.handleGetTechnologyPlatformType)
+    },
+    // 工作状态
+    getWorkStatus () {
+      try {
+        var postdata = '<?xml version=\'1.0\' encoding=\'utf-8\'?>'
+        postdata += '<soap:Envelope  xmlns:soap=\'http://schemas.xmlsoap.org/soap/envelope/\'>'
+        postdata += '<soap:Body><m:queryWorkState xmlns:m=\'http://webservice.attence.com/\'>'
+        postdata += '</m:queryWorkState></soap:Body>'
+        postdata += '</soap:Envelope>'
+        console.log(postdata)
+        axios({
+          method: 'POST',
+          url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+          headers: { 'content-type': 'application/text; charset=utf-8' },
+          data: postdata
+        }).then(this.handleGetWorkStatus).catch(function (error) {
+          console.log(error)
+        })
+      } catch (e) {
+        console.log(e)
+      }
       // $.ajax({
       //   url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
       //   type: 'POST',
@@ -158,17 +154,13 @@ export default {
       //     console.log(textStatus)
       //   }
       // })
-      axios.get('../../static/mock/technologyplatformtype.json').then(this.handleGetTechnologyPlatformType)
-    },
-    getWorkStatus () {
-      axios.get('../../static/mock/workstatus.json').then(this.handleGetWorkStatus)
+      // axios.get('../../static/mock/workstatus.json').then(this.handleGetWorkStatus)
     },
     getLeaveType () {
       axios.get('../../static/mock/leavetype.json').then(this.handleGetLeaveType)
     },
     // 技术平台类型
     handleGetTechnologyPlatformType (res) {
-      console.log(typeof res)
       if (res.data.status === '0' && res.data) {
         this.technologyPlatformList = res.data.result
         this.timesheetObj.technologyPlatformType = '1'
@@ -176,10 +168,27 @@ export default {
     },
     // 工作状态
     handleGetWorkStatus (res) {
-      if (res.data.status === '0' && res.data) {
-        this.workStatusList = res.data.result
-        this.timesheetObj.workState = '1'
+      if (res.data.indexOf('<String>') !== -1) {
+        try {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            // var bbb = sss.replace(/\\/g,"")
+            let processData = eval('(' + sliceData + ')')
+            this.workStatusList = processData.rows
+            this.timesheetObj.workState = '1'
+            console.log(JSON.stringify(this.workStatusList))
+          } else {
+            console.log(sliceData)
+          }
+        } catch (e) {
+          console.log(e)
+        }
       }
+      // console.log(res.data)
+      // if (res.data.status === '0' && res.data) {
+      //   this.workStatusList = res.data.result
+      //   this.timesheetObj.workState = '1'
+      // }
     },
     // 请假类型
     handleGetLeaveType (res) {
