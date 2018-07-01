@@ -1,9 +1,9 @@
 <template>
-<mu-paper class="info-paper"  :zDepth="1">
-  <mu-row>
-    <mu-col class="info-col" width="50" tablet="30" desktop="30">员工号:P003125736</mu-col>
-    <mu-col class="info-col" width="50" tablet="30" desktop="30">员工姓名:张三</mu-col>
-    <mu-col class="info-col" width="50" tablet="30" desktop="30">技术平台:测试</mu-col>
+<mu-paper class="info-paper" :zDepth="1">
+  <mu-row class="info-row">
+    <mu-col class="info-col" width="50" tablet="50" desktop="50"><span>员工号:</span><p>{{userNum}}</p></mu-col>
+    <mu-col class="info-col" width="50" tablet="50" desktop="50"><span>员工姓名:</span><p>{{userName}}</p></mu-col>
+    <mu-col class="info-col" width="100" tablet="100" desktop="100"><span>项目名称:</span><p>{{userProject}}</p></mu-col>
   </mu-row>
 </mu-paper>
 </template>
@@ -14,7 +14,10 @@ export default {
   name: 'HomeMyinfo',
   data () {
     return {
-
+      userId: '',
+      userName: '',
+      userNum: '',
+      userProject: ''
     }
   },
   methods: {
@@ -22,35 +25,43 @@ export default {
     getQueryUserInfoFor () {
       try {
         let pid = 'P0005338'
-        let postdata=`<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
-        console.log(postdata)
+        let postdata =
+          `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
         axios({
           method: 'POST',
-          url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
-          headers: { 'content-type': 'application/text; charset=utf-8' },
+          url: '/api',
+          // url: '/attence/webService/AttenceService?wsdl',
+          headers: {
+            'content-type': 'application/text; charset=utf-8'
+          },
           data: postdata
         }).then(this.handleQueryUserInfoFor).catch(function (error) {
           console.log(error)
         })
-
       } catch (e) {
         console.log(e)
       }
     },
+    // 处理查询用户信息
     handleQueryUserInfoFor (res) {
-      console.log(res)
-      // $.ajax({
-      // 	url : "http://localhost:82/attence/webService/AttenceService?wsdl",
-      // 	type : "post",
-      // 	dataType : "text",
-      // 	contentType : "application/text;charset=utf-8",
-      // 	data : postdata,
-      // 	success : function(result) {
-      // 		alert(result)
-      // 	},
-      // 	error : function(err) {
-      // 		alert(err.responseText)
-      // 	}
+      if (res.data.indexOf('<String>') !== -1) {
+        try {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let handleData = (new Function('return' + sliceData))()
+            this.userId = handleData.user_id
+            this.userName = handleData.user_name
+            this.userNum = handleData.user_num
+            this.userProject = handleData.user_project
+          } else {
+            console.log(sliceData)
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      } else {
+        console.log(res.data)
+      }
     }
   },
   mounted () {
@@ -62,7 +73,23 @@ export default {
 <style lang="stylus" scoped>
   .info-paper
     width: 100%;
-    .info-col
-      padding: .1rem;
-      font-size: .3rem;
+    .info-row
+      padding:.1rem .2rem;
+      .info-col
+        padding: .1rem;
+        font-size: .3rem;
+        span,
+        p
+          display:inline-block;
+  .info-paper
+    .info-row
+      span
+        margin-right:.1rem;
+  .info-paper
+    .info-row
+      .info-col:last-child
+        span
+          vertical-align: top;
+        p
+          width: 75%;
 </style>

@@ -21,7 +21,8 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
-    // "no-eval": ["error", {"allowIndirect": true}], // default is false
+    "no-new-func": 0,//禁止使用new Function
+    "no-eval": 0,
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development

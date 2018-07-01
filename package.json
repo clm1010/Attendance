@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "fastclick": "^1.0.6",
     "muse-ui": "^2.1.0",
     "stylus": "^0.54.5",

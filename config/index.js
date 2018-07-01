@@ -8,9 +8,14 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'attendance',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api':{
+        changeOrigin: true,
+        target: 'http://localhost:82/attence/webService/AttenceService?wsdl'
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -49,9 +54,14 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'Attendance',
+    assetsSubDirectory: 'attendance',
     assetsPublicPath: './',
-
+    proxyTable: {
+      '/api':{
+        changeOrigin: true,
+        target: 'http://localhost:82'
+      }
+    },
     /**
      * Source Maps
      */
