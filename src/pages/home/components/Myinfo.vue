@@ -53,6 +53,9 @@ export default {
             this.userName = handleData.user_name
             this.userNum = handleData.user_num
             this.userProject = handleData.user_project
+            sessionStorage.setItem('user_id', handleData.user_id)
+            sessionStorage.setItem('user_name', handleData.user_name)
+            sessionStorage.setItem('user_num', handleData.user_num)
           } else {
             console.log(sliceData)
           }

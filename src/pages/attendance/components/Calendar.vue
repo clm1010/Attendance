@@ -94,21 +94,22 @@ export default {
     },
     clickDay: function (item, index) {
       if (!(this.isHideOtherday && item.nextDayShow) && !item.dayHide) {
-        this.$emit('choseDay', item.date)
+        this.$emit('choseDay', item.date,event)
       }
-      if (item.otherMonth) {
-        item.otherMonth < 0 ? this.PreMonth(item.date) : this.NextMonth(item.date)
-      } else {
-        if (!(this.isHideOtherday && item.nextDayShow) && !item.dayHide) {
-          for (let i = 0; i < this.list.length; i++) {
-            if (i === index) {
-              this.list[i].isToday = true
-            } else {
-              this.list[i].isToday = false
-            }
-          }
-        }
-      }
+      // 选中日期跳转当月日
+      // if (item.otherMonth) {
+      //   item.otherMonth < 0 ? this.PreMonth(item.date) : this.NextMonth(item.date)
+      // } else {
+      //   if (!(this.isHideOtherday && item.nextDayShow) && !item.dayHide) {
+      //     for (let i = 0; i < this.list.length; i++) {
+      //       if (i === index) {
+      //         this.list[i].isToday = true
+      //       } else {
+      //         this.list[i].isToday = false
+      //       }
+      //     }
+      //   }
+      // }
     },
     ChoseMonth: function (date, isChosedDay = true) {
       date = this.dateFormat(date)

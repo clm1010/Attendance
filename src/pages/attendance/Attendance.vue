@@ -52,9 +52,16 @@ export default {
     }
   },
   methods: {
-    clickDay (dateparams) {
+    clickDay (dateparams,e) {
+      let isCurrent = e.currentTarget.querySelector('li').className
+      if (isCurrent.indexOf('mark1') !== -1 || isCurrent.indexOf('mark2') !== -1 || isCurrent.indexOf('wh_nextDayShow') !== -1) {
+        console.log(isCurrent);
+        return false
+      }
       console.log('选中了', dateparams) // 选中某天
-      this.$router.push({name: 'Addworkhour', params: { date: dateparams }})
+      // console.log(this);
+
+      // this.$router.push({name: 'Addworkhour', params: { date: dateparams }})
       // this.$toast('选中了' + dateparams)
     },
     clickToday (dateparams) {
@@ -62,6 +69,8 @@ export default {
     },
     changeDate (dateparams) {
       // this.$toast('切换到的月份为' + dateparams)
+      console.log(123)
+      return false
       console.log('左右点击切换月份', dateparams) // 左右点击切换月份
     },
     demo () {
@@ -69,7 +78,33 @@ export default {
       this.$refs.Calendar.ChoseMonth('2017-12-12') // 跳到12月12日
     },
     getAttenDate () {
-      axios.get('./static/mock/attendatelist.json').then(this.handleDate)
+      axios.get('./attendance/mock/attendatelist.json').then(this.handleCalendar)
+      // try {
+      //   let userId = sessionStorage.getItem('user_id')
+      //   let myDate = new Date()
+      //   let month = myDate.getMonth() + 1 < 10 ? '0' + (myDate.getMonth() + 1) : myDate.getMonth() + 1
+      //   let yearMonth = myDate.getFullYear() + '-' + month
+      //   console.log(yearMonth)
+      //   if (userId) {
+      //     let postdata =
+      //       `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserCalendar xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><year_month type='String'>${yearMonth}</year_month></m:queryUserCalendar></soap:Body></soap:Envelope>`
+      //     axios({
+      //       method: 'POST',
+      //       url: '/api',
+      //       // url: '/attence/webService/AttenceService?wsdl',
+      //       headers: {
+      //         'content-type': 'application/text; charset=utf-8'
+      //       },
+      //       data: postdata
+      //     }).then(this.handleCalendar).catch(function (error) {
+      //       console.log(error)
+      //     })
+      //   } else {
+      //     console.log('user_id' + userId)
+      //   }
+      // } catch (e) {
+      //   console.log(e)
+      // }
     },
     handelDate (arry) {
       function format (date) {
@@ -91,7 +126,8 @@ export default {
       }
       return arry
     },
-    handleDate (res) {
+    handleCalendar (res) {
+      console.log(res)
       if (res.data.status === '0' && res.data) {
         this.arr = this.handelDate(res.data.result)
         console.log(JSON.stringify(this.arr))

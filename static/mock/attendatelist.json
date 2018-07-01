@@ -2,25 +2,25 @@
   "status": "0",
   "msg": "",
   "result": [{
-    "date": "2018-06-01",
+    "date": "2018-07-01",
     "checkstatus": "1"
   }, {
-    "date": "2018-06-02",
+    "date": "2018-07-02",
     "checkstatus": "1"
   }, {
-    "date": "2018-06-15",
+    "date": "2018-07-15",
     "checkstatus": "1"
   }, {
-    "date": "2018-06-18",
+    "date": "2018-07-18",
     "checkstatus": "2"
   }, {
-    "date": "2018-06-24",
+    "date": "2018-07-24",
     "checkstatus": "3"
   }, {
-    "date": "2018-06-27",
+    "date": "2018-07-27",
     "checkstatus": "2"
   }, {
-    "date": "2018-06-30",
+    "date": "2018-07-30",
     "checkstatus": "3"
   }]
 }
