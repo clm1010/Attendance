@@ -41,7 +41,6 @@ export default {
   },
   methods: {
     handleAddTimesheet (addworkhoureTimesheet) {
-      console.log(123)
       this.addTimesheetList.push({
         addworkhoureTimesheet
       })
@@ -53,6 +52,7 @@ export default {
         console.log(this.addTimesheetList.length)
       }
     },
+    // 提交全部工时表单
     handleSubmit () {
       for (let i = 0; i < this.addTimesheetList.length; i++) {
         this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
@@ -65,7 +65,6 @@ export default {
   mounted () {
     this.currentDate = this.$route.params.date
     this.currentDate = this.currentDate.replace(/\//g, '-')
-    console.log(this.currentDate)
     this.addTimesheetList = []
     this.handleAddTimesheet('AddworkhoureTimesheet')
   }

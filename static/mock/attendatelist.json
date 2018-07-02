@@ -3,24 +3,24 @@
   "msg": "",
   "result": [{
     "date": "2018-07-01",
-    "checkstatus": "1"
+    "check_status": "1"
   }, {
     "date": "2018-07-02",
-    "checkstatus": "1"
+    "check_status": "1"
   }, {
     "date": "2018-07-15",
-    "checkstatus": "1"
+    "check_status": "1"
   }, {
     "date": "2018-07-18",
-    "checkstatus": "2"
+    "check_status": "2"
   }, {
     "date": "2018-07-24",
-    "checkstatus": "3"
+    "check_status": "3"
   }, {
     "date": "2018-07-27",
-    "checkstatus": "2"
+    "check_status": "2"
   }, {
     "date": "2018-07-30",
-    "checkstatus": "3"
+    "check_status": "3"
   }]
 }

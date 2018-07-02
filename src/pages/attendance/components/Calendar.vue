@@ -2,13 +2,13 @@
 <div class="wh_container">
   <div class="wh_content_all">
     <div class="wh_top_changge">
-      <li @click="PreMonth()">
+      <!-- <li @click="PreMonth()">
         <div class="wh_jiantou1"></div>
-      </li>
+      </li> -->
       <li class="wh_content_li">{{dateTop}}</li>
-      <li @click="NextMonth()">
+      <!-- <li @click="NextMonth()">
         <div class="wh_jiantou2"></div>
-      </li>
+      </li> -->
     </div>
     <div class="wh_title">
       <div class="wh_content_item" v-for="item in weekTop" :key="item.k">
@@ -94,7 +94,7 @@ export default {
     },
     clickDay: function (item, index) {
       if (!(this.isHideOtherday && item.nextDayShow) && !item.dayHide) {
-        this.$emit('choseDay', item.date,event)
+        this.$emit('choseDay', item.date, event)
       }
       // 选中日期跳转当月日
       // if (item.otherMonth) {

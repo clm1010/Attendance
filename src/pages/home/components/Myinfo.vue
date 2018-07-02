@@ -25,27 +25,32 @@ export default {
     getQueryUserInfoFor () {
       try {
         let pid = 'P0005338'
-        let postdata =
-          `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
-        axios({
-          method: 'POST',
-          url: '/api',
-          // url: '/attence/webService/AttenceService?wsdl',
-          headers: {
-            'content-type': 'application/text; charset=utf-8'
-          },
-          data: postdata
-        }).then(this.handleQueryUserInfoFor).catch(function (error) {
-          console.log(error)
-        })
+        if (pid) {
+          sessionStorage.setItem('pid', pid)
+          let postdata =
+            `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: '/attence/webService/AttenceService?wsdl',
+            headers: {
+              'content-type': 'application/text; charset=utf-8'
+            },
+            data: postdata
+          }).then(this.handleQueryUserInfoFor).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('pid:' + pid)
+        }
       } catch (e) {
         console.log(e)
       }
     },
     // 处理查询用户信息
     handleQueryUserInfoFor (res) {
-      if (res.data.indexOf('<String>') !== -1) {
-        try {
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
@@ -59,11 +64,11 @@ export default {
           } else {
             console.log(sliceData)
           }
-        } catch (e) {
-          console.log(e)
+        } else {
+          console.log(res.data)
         }
-      } else {
-        console.log(res.data)
+      } catch (e) {
+        console.log(e)
       }
     }
   },
