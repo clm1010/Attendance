@@ -119,9 +119,9 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            console.log(handleData)
+            // console.log(handleData)
             this.arr = this.handelDate(handleData.rows)
-            console.log(JSON.stringify(this.arr))
+            // console.log(JSON.stringify(this.arr))
           } else {
             console.log(sliceData)
           }

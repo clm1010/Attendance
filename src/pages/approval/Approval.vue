@@ -58,7 +58,7 @@ export default {
   },
   data () {
     return {
-      monthValue: '1',
+      monthValue: '',
       toast: false,
       approvalPassedTableData: [],
       total: 0,
@@ -83,7 +83,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'name',
+          field: 'user_name',
           title: '姓名',
           width: 15,
           titleAlign: 'center',
@@ -91,7 +91,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'reportdays',
+          field: 'filled_cnt',
           title: '申报天数',
           width: 10,
           titleAlign: 'center',
@@ -99,7 +99,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'submitteddays',
+          field: 'submit_cnt',
           title: '已提交天数',
           width: 14,
           titleAlign: 'center',
@@ -107,7 +107,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'unsubmitteddays',
+          field: 'notSubmint_cnt',
           title: '未提交天数',
           width: 14,
           titleAlign: 'center',
@@ -115,7 +115,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'auditeddays',
+          field: 'approved_cnt',
           title: '已审核天数',
           width: 14,
           titleAlign: 'center',
@@ -150,14 +150,56 @@ export default {
       console.log('选择更改', JSON.stringify(this.approvalPassedTableData))
     },
     getApprovalTableData () {
-      axios.get('../../static/mock/approvaltablelist.json').then(this.handleGetApprovalTableData)
+      try {
+        let userId = sessionStorage.getItem('user_id')
+        let userName = sessionStorage.getItem('user_name')
+        let month = this.monthValue
+        // console.log(typeof month)
+        if (userId) {
+          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAllAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month><name type='String'>${userName}</name></m:queryAllAttendanceList></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: '/attence/webService/AttenceService?wsdl',
+            headers: { 'content-type': 'application/text; charset=utf-8' },
+            data: postdata
+          }).then(this.handleGetApprovalTableData).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('user_id:' + userId)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+
+      // axios.get('../../attendance/mock/approvaltablelist.json').then(this.handleGetApprovalTableData)
     },
     handleGetApprovalTableData (res) {
-      if (res.data.status === '0' && res.data) {
-        let tableDataList = res.data.result
-        this.total = tableDataList.length
-        this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let handleData = (new Function('return' + sliceData))()
+            let tableDataList = handleData.rows
+            this.total = tableDataList.length
+            this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+          } else {
+            console.log(sliceData)
+          }
+        } else {
+          console.log(res.data)
+        }
+      } catch (e) {
+        console.log(e)
       }
+      // console.log(res)
+      // console.log(res.data)
+      // if (res.data.status === '0' && res.data) {
+      //   let tableDataList = res.data.result
+      //   this.total = tableDataList.length
+      //   this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+      // }
     },
     pageChange (pageIndex) {
       console.log(pageIndex)
@@ -199,8 +241,8 @@ export default {
     },
     // 处理表格点击详情事件
     handleClickEventDetails (params) {
-      console.log(params)
       if (params.type === 'details') {
+        sessionStorage.setItem('month', this.monthValue)
         this.$router.push({
           name: 'ApprovalPersonalInfoList',
           params: {
@@ -218,6 +260,9 @@ export default {
     }
   },
   mounted () {
+    let myDate = new Date()
+    let month = myDate.getMonth() + 1
+    this.monthValue = month.toString()
     this.getApprovalTableData()
   }
 }
@@ -265,7 +310,7 @@ Vue.component('table-operation', {
      background-color: $bgColor;
      color:#FFF;
   .column-cell-class-name-two
-     background-color: #d8eeff;
+     /* background-color: #d8eeff; */
   .btn-details
     width: 100%;
     text-align: center;

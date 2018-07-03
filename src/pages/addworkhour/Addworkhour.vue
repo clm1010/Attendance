@@ -21,6 +21,7 @@
       ref = "dataAddTimes"
     />
   </div>
+  <mu-toast v-if="toast" message="工时时间不能超过12小时" @close="hideToast"/>
   <!-- <button type="button" name="button" @click="handleAddTimesheet('AddworkhoureTimesheet')">添加</button> -->
 </div>
 </template>
@@ -34,6 +35,7 @@ export default {
   },
   data () {
     return {
+      toast: false,
       currentDate: '',
       addTimesheetList: [],
       submitAllTimesheetList: []
@@ -54,12 +56,27 @@ export default {
     },
     // 提交全部工时表单
     handleSubmit () {
+      let allNormalTime = 0
+      // console.log(this.addTimesheetList.length)
       for (let i = 0; i < this.addTimesheetList.length; i++) {
+        allNormalTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time)
+        if (allNormalTime > 12) {
+          this.toast = true
+          if (this.toastTimer) {
+            clearTimeout(this.toastTimer)
+          }
+          this.toastTimer = setTimeout(() => { this.toast = false }, 3000)
+          return false
+        }
         this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
       }
       console.log(JSON.stringify(this.submitAllTimesheetList))
       this.submitAllTimesheetList = []
-      this.$router.push('/attendance')
+      // this.$router.push('/attendance')
+    },
+    hideToast () {
+      this.toast = false
+      if (this.toastTimer) clearTimeout(this.toastTimer)
     }
   },
   mounted () {
@@ -92,4 +109,12 @@ export default {
     &:first-of-type
       >>> .demo-raised-button
         display: none;
+  .mu-toast
+    text-align:center;
+    background-color:rgba(33,150,240,.8);
+    right:0;
+    left:0;
+    margin:auto;
+    bottom:2rem;
+    width:6rem;
 </style>

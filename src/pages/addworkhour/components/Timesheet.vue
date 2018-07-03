@@ -289,13 +289,15 @@ export default {
       leaveTypeList: [],
       projectType: '',
       timesheetObj: {
+        user_id: '',
+        user_name: '',
         project_id: '',
         project_name: '',
         techplatform_type: '',
         workstate_type: '',
         date: '',
-        normal_time: '',
-        overTime: '',
+        normal_time: '8',
+        overwork_time: '',
         job_content: '',
         askleave_type: '',
         askleave_time: '',
@@ -448,6 +450,8 @@ export default {
     this.getProject()
     this.getWorkStatus()
     this.getLeaveType()
+    this.timesheetObj.user_id = sessionStorage.getItem('user_id')
+    this.timesheetObj.user_name = sessionStorage.getItem('user_name')
     console.log('被创建')
   }
 }

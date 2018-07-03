@@ -63,7 +63,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'name',
+          field: 'user_name',
           title: '姓名',
           width: 15,
           titleAlign: 'center',
@@ -71,7 +71,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'projectname',
+          field: 'project_name',
           title: '项目',
           width: 15,
           titleAlign: 'center',
@@ -79,7 +79,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'normaltile',
+          field: 'normal_time',
           title: '工时',
           width: 10,
           titleAlign: 'center',
@@ -87,7 +87,7 @@ export default {
           isResize: true,
           titleCellClassName: 'title-cell-class-header'
         }, {
-          field: 'overworktime',
+          field: 'overwork_time',
           title: '加班工时',
           width: 15,
           titleAlign: 'center',
@@ -110,14 +110,57 @@ export default {
   methods: {
     // 获取审批个人信息列表
     getApprovalPersonalInfoTableData () {
-      axios.get('../../static/mock/approvaltablelist2.json').then(this.handleGetApprovalPersonalInfoTableData)
+      let personelInfo = this.$route.params.personnelinfo
+      let userId = sessionStorage.getItem('user_id')
+      let month = sessionStorage.getItem('month')
+      try {
+        if (personelInfo) {
+          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetailList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month></m:queryAttendanceDetailList></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: '/attence/webService/AttenceService?wsdl',
+            headers: { 'content-type': 'application/text; charset=utf-8' },
+            data: postdata
+          }).then(this.handleGetApprovalPersonalInfoTableData).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('personelInfo:' + personelInfo)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+      // axios.get('../../attendance/mock/approvaltablelist2.json').then(this.handleGetApprovalPersonalInfoTableData)
     },
     handleGetApprovalPersonalInfoTableData (res) {
-      if (res.data.status === '0' && res.data) {
-        let tableDataList = res.data.result
-        this.total = tableDataList.length
-        this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let handleData = (new Function('return' + sliceData))()
+            let tableDataList = handleData.rows
+            this.total = tableDataList.length
+            for (let i = 0; i < tableDataList.length; i++) {
+              if (tableDataList[i].check_status === '2' || tableDataList[i].check_status === '3') {
+                tableDataList[i]._disabled = true
+              }
+            }
+            this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+          } else {
+            console.log(sliceData)
+          }
+        } else {
+          console.log(res.data)
+        }
+      } catch (e) {
+        console.log(e)
       }
+      // if (res.data.status === '0' && res.data) {
+      //   let tableDataList = res.data.result
+      //   this.total = tableDataList.length
+      //   this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+      // }
     },
     handleTableSelectAll (selection) {
       this.approvalPersonalInfoTableList = selection
@@ -129,7 +172,10 @@ export default {
     },
     // 设置单元格样式名称
     columnCellClass (rowIndex, columnName, rowData) {
-      if (rowIndex % 2) {
+      // if (rowIndex % 2) {
+      //   return 'column-cell-class-name-two'
+      // }
+      if (rowData.check_status === '3') {
         return 'column-cell-class-name-two'
       }
     },
@@ -188,7 +234,6 @@ export default {
     }
   },
   mounted () {
-    console.log('123')
     this.getApprovalPersonalInfoTableData()
   }
 }
@@ -221,13 +266,13 @@ Vue.component('table-operation', {
 })
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 @import '~@/assets/styles/varibles.styl'
   .title-cell-class-header
      background-color: $bgColor;
      color:#FFF;
   .column-cell-class-name-two
-     background-color: #d8eeff;
+     color: #FF0000;
   .btn-details
     width: 100%;
     text-align: center;

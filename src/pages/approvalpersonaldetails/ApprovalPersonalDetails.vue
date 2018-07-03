@@ -65,6 +65,7 @@
 
 <script>
 import ApprovalPersonalDetailsHeader from './components/Header'
+import axios from 'axios'
 export default {
   name: 'ApprovalPersonalDetails',
   components: {
@@ -73,22 +74,60 @@ export default {
   data () {
     return {
       isShow: true,
-      personalDetailsObj: {
-        date: '1',
-        name: '2',
-        projectname: '3',
-        normaltile: '4',
-        overworktime: '5',
-        workContent: '6'
-      }
+      personalDetailsObj: {}
     }
   },
   methods: {
+    getApprovalPersonalDetails () {
+      try {
+        let personalDetailsId = this.$route.params.personaldetailsid
+        console.log(personalDetailsId.id)
+        if (personalDetailsId.id) {
+          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetail xmlns:m='http://webservice.attence.com/'><id type='String'>${personalDetailsId.id}</id></m:queryAttendanceDetail></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: '/attence/webService/AttenceService?wsdl',
+            headers: { 'content-type': 'application/text; charset=utf-8' },
+            data: postdata
+          }).then(this.handleGetApprovalPersonalDetails).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('id: ' + personalDetailsId.id)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handleGetApprovalPersonalDetails (res) {
+      console.log(res.data)
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let handleData = (new Function('return' + sliceData))()
+            console.log(handleData)
+            this.personalDetailsObj = handleData
+            console.log(this.personalDetailsObj)
+          } else {
+            console.log(sliceData)
+          }
+        } else {
+          console.log(res.data)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
     handleSubmit (e) {
       console.log(e.target)
       console.log(JSON.stringify(this.personalDetailsObj))
       this.$router.go(-1)
     }
+  },
+  mounted () {
+    this.getApprovalPersonalDetails()
   }
 }
 </script>
