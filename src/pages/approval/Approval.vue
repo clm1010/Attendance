@@ -240,13 +240,13 @@ export default {
       if (this.toastTimer) clearTimeout(this.toastTimer)
     },
     // 处理表格点击详情事件
-    handleClickEventDetails (params) {
-      if (params.type === 'details') {
-        sessionStorage.setItem('month', this.monthValue)
+    handleClickEventDetails (pars) {
+      if (pars.type === 'details') {
+        // sessionStorage.setItem('month', this.monthValue)
         this.$router.push({
           name: 'ApprovalPersonalInfoList',
           params: {
-            personnelinfo: params.rowData
+            month: pars.rowData.month
           }
         })
       }

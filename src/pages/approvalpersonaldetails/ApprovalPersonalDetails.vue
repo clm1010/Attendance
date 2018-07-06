@@ -5,7 +5,6 @@
       <mu-card class="personal-details-card">
           <mu-text-field
             v-model="personalDetailsObj.date"
-            v-show="isShow"
             hintText="日期"
             label="日期"
             icon="access_time"
@@ -14,8 +13,7 @@
             disabled
           />
           <mu-text-field
-            v-model="personalDetailsObj.projectname"
-            v-show="isShow"
+            v-model="personalDetailsObj.projectName"
             hintText="项目名称"
             label="项目名称"
             icon="card_travel"
@@ -24,8 +22,7 @@
             disabled
           />
           <mu-text-field
-            v-model="personalDetailsObj.normaltile"
-            v-show="isShow"
+            v-model="personalDetailsObj.normalTime"
             hintText="工时"
             label="工时"
             icon="alarm_on"
@@ -34,8 +31,7 @@
             disabled
           />
           <mu-text-field
-            v-model="personalDetailsObj.overworktime"
-            v-show="isShow"
+            v-model="personalDetailsObj.overworkTime"
             hintText="加班工时"
             label="加班工时"
             icon="alarm_add"
@@ -44,10 +40,39 @@
             disabled
           />
           <mu-text-field
-            v-model="personalDetailsObj.workContent"
-            v-show="isShow"
+            v-model="personalDetailsObj.jobContent"
             hintText="工作内容"
             label="工作内容"
+            multiLine
+            icon="content_paste"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.askleaveType"
+            hintText="请假类型"
+            label="请假类型"
+            multiLine
+            icon="developer_board"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.askleaveType"
+            hintText="请假工时"
+            label="请假工时"
+            multiLine
+            icon="alarm_off"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.askleaveType"
+            hintText="请假理由"
+            label="请假理由"
             multiLine
             icon="content_paste"
             labelFloat
@@ -80,10 +105,10 @@ export default {
   methods: {
     getApprovalPersonalDetails () {
       try {
-        let personalDetailsId = this.$route.params.personaldetailsid
-        console.log(personalDetailsId.id)
-        if (personalDetailsId.id) {
-          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetail xmlns:m='http://webservice.attence.com/'><id type='String'>${personalDetailsId.id}</id></m:queryAttendanceDetail></soap:Body></soap:Envelope>`
+        let pdId = this.$route.params.pdid
+        console.log(pdId)
+        if (pdId !== '') {
+          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetail xmlns:m='http://webservice.attence.com/'><id type='String'>${pdId}</id></m:queryAttendanceDetail></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
             url: '/api',
@@ -94,7 +119,7 @@ export default {
             console.log(error)
           })
         } else {
-          console.log('id: ' + personalDetailsId.id)
+          console.log('pdId: ' + pdId)
         }
       } catch (e) {
         console.log(e)
@@ -107,7 +132,7 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            console.log(handleData)
+            console.log(handleData.date)
             this.personalDetailsObj = handleData
             console.log(this.personalDetailsObj)
           } else {

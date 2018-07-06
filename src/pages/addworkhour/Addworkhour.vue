@@ -1,6 +1,6 @@
 <template>
 <div>
-  <mu-appbar title="添加工时">
+  <mu-appbar :title="title">
     <mu-icon-button icon="chevron_left" slot="left" to="/attendance" />
     <mu-icon-button icon="check" slot="right" @click="handleSubmit"></mu-icon-button>
   </mu-appbar>
@@ -9,6 +9,7 @@
   </mu-paper>
   <addworkhoure-timesheet
     v-for="(item,index) in addTimesheetList"
+    :current-date='currentDate'
     :key="index"
     ref="addTimesheet"
     @deleteTimesheet="handleDeleteTimesheet"
@@ -21,12 +22,13 @@
       ref = "dataAddTimes"
     />
   </div>
-  <mu-toast v-if="toast" message="工时时间不能超过12小时" @close="hideToast"/>
+  <mu-toast v-if="toast" :message="message" @close="hideToast"/>
   <!-- <button type="button" name="button" @click="handleAddTimesheet('AddworkhoureTimesheet')">添加</button> -->
 </div>
 </template>
 
 <script>
+import axios from 'axios'
 import AddworkhoureTimesheet from './components/Timesheet'
 export default {
   name: 'Addworkhour',
@@ -36,12 +38,27 @@ export default {
   data () {
     return {
       toast: false,
+      title: '',
+      message: '',
       currentDate: '',
       addTimesheetList: [],
-      submitAllTimesheetList: []
+      submitAllTimesheetList: [],
+      updateData: []
     }
   },
   methods: {
+    getAjaxUpdateTimesheet () {
+      axios.get('../../attendance/mock/timesheet.json').then(this.handleGetUpdateTimesheet)
+    },
+    handleGetUpdateTimesheet (res) {
+      if (res.data.status === '0' && res.data) {
+        let result = res.data.result
+        for (let i = 1; i < result.length; i++) {
+          this.handleAddTimesheet('AddworkhoureTimesheet')
+        }
+        this.updateData = result
+      }
+    },
     handleAddTimesheet (addworkhoureTimesheet) {
       this.addTimesheetList.push({
         addworkhoureTimesheet
@@ -56,34 +73,84 @@ export default {
     },
     // 提交全部工时表单
     handleSubmit () {
+      this.submitAllTimesheetList = []
       let allNormalTime = 0
+      let overworkTime = 0
+      let allTime = 0
       // console.log(this.addTimesheetList.length)
       for (let i = 0; i < this.addTimesheetList.length; i++) {
+        console.log(this.$refs.addTimesheet[i].timesheetObj)
         allNormalTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time)
-        if (allNormalTime > 12) {
+        overworkTime += Number(this.$refs.addTimesheet[i].timesheetObj.overwork_time)
+        allTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time) + Number(this.$refs.addTimesheet[i].timesheetObj.overwork_time)
+        if (allNormalTime > 11 || overworkTime > 11 || allTime > 11) {
           this.toast = true
+          this.message = '全部工时时间或加班工时不能超过12小时'
           if (this.toastTimer) {
             clearTimeout(this.toastTimer)
           }
-          this.toastTimer = setTimeout(() => { this.toast = false }, 3000)
+          this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
           return false
         }
         this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
       }
-      console.log(JSON.stringify(this.submitAllTimesheetList))
-      this.submitAllTimesheetList = []
+      this.handlePOSTSubmit(this.submitAllTimesheetList)
       // this.$router.push('/attendance')
+    },
+    handlePOSTSubmit (data) {
+      try {
+        let userId = sessionStorage.getItem('user_id')
+        if (userId && data != null) {
+          console.log(JSON.stringify(data))
+          let dataStr = JSON.stringify(data)
+          let postdata =
+            `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: '/attence/webService/AttenceService?wsdl',
+            headers: {
+              'content-type': 'application/text; charset=utf-8'
+            },
+            data: postdata
+          }).then(this.handleGetPOSTSubmit).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('userId: ' + userId)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handleGetPOSTSubmit (res) {
+      console.log(res)
     },
     hideToast () {
       this.toast = false
       if (this.toastTimer) clearTimeout(this.toastTimer)
     }
   },
-  mounted () {
-    this.currentDate = this.$route.params.date
-    this.currentDate = this.currentDate.replace(/\//g, '-')
+  created () {
     this.addTimesheetList = []
+    this.currentDate = this.$route.params.date
+    this.title = this.$route.params.title
+    this.currentDate = this.currentDate.replace(/\//g, '-')
     this.handleAddTimesheet('AddworkhoureTimesheet')
+    this.getAjaxUpdateTimesheet()
+  },
+  updated () {
+    for (let i = 0; i < this.addTimesheetList.length; i++) {
+      this.$refs.addTimesheet[i].defTPT(this.updateData[i].techplatform_type)
+      this.$refs.addTimesheet[i].defWorkStatus(this.updateData[i].workstate_type)
+      // this.$refs.addTimesheet[j].defProject(this.updateData[j].project_id, this.updateData[j].project_name, this.updateData[j].check_id)
+      // console.log(this.$refs.addTimesheet[j].timesheetObj.user_name)
+      // console.log(this.$refs.addTimesheet[j].$el)
+    }
+    // for (let j = 0; j < this.addTimesheetList.length; j++) {
+    //   console.log(this.$refs.addTimesheet[j].$el[0])
+    //   this.$refs.addTimesheet[j].$el[0].style.display = 'none'
+    // }
   }
 }
 </script>
@@ -107,7 +174,7 @@ export default {
     color: #FFF;
   .formBody
     &:first-of-type
-      >>> .demo-raised-button
+      >>> .isBtnDelete
         display: none;
   .mu-toast
     text-align:center;

@@ -1,6 +1,6 @@
 <template>
 <form ref="addForm" :modle="timesheetObj" class="formBody"  method="post">
-  <mu-raised-button label="删除" class="demo-raised-button"  @click="handleDeleteTimesheetClick" primary/>
+  <mu-raised-button label="删除" class="isBtnDelete"  @click="handleDeleteTimesheetClick" primary/>
   <mu-card class="timesheet-card">
     <div class="timesheet-panel">
       <i class="material-icons">card_travel</i>
@@ -10,6 +10,7 @@
           class="timesheet-select"
           name=""
           v-model="timesheetObj.techplatform_type"
+          :defTPT="defTPT"
           @change="handleTechnologyPlatformTypeInput"
         >
           <option
@@ -41,7 +42,7 @@
             :title="item.project_name"
             :dataGroupLeaderId="item.group_leader_id"
             :key="index"
-            >{{item.project_id}}</option>
+            >{{item.project_name}}</option>
         </select>
         <div>
           <hr class="mu-text-field-line">
@@ -53,15 +54,16 @@
       <div class="timesheet-content">
         <label class="lbl-title">工作状态</label>
         <select
+          id="Workstate_Type"
           class="timesheet-select"
           v-model="timesheetObj.workstate_type"
+          :defProject="defWorkStatus"
           @change="handleWorkStatusInput"
         >
           <option
             v-for = "(item,index) in workStatusList"
             :value="item.value"
             :title="item.name"
-            :dataGroupLeaderId="item.group_leader_id"
             :key="index"
             >{{item.name}}</option>
         </select>
@@ -70,11 +72,11 @@
         </div>
       </div>
     </div>
-    <div class="timesheet-panel" v-show="isShow">
+    <div id='TP_Normal_Time' class="timesheet-panel" v-show="isShow">
       <i class="material-icons">alarm_on</i>
       <div class="timesheet-content">
         <label class="lbl-title">工时</label>
-        <input
+        <input id="Normal_Time"
           type="text"
           maxlength="3"
           class="timesheet-input"
@@ -85,13 +87,14 @@
         </div>
       </div>
     </div>
-    <div class="timesheet-panel" v-show="isShow">
+    <div id='TP_Overwork_Time' class="timesheet-panel" v-show="isShow">
       <i class="material-icons">alarm_add</i>
       <div class="timesheet-content">
         <label class="lbl-title">加班工时</label>
         <input
           type="text"
           maxlength="3"
+          id="Overwork_Time"
           class="timesheet-input"
           v-model="timesheetObj.overwork_time"
         />
@@ -100,13 +103,14 @@
         </div>
       </div>
     </div>
-    <div class="timesheet-panel" v-show="isShow">
+    <div id="TP_Job_Content" class="timesheet-panel" v-show="isShow">
       <i class="material-icons">content_paste</i>
       <div class="timesheet-content">
         <label class="lbl-title">工作内容</label>
         <textarea
           name="name"
           rows="2"
+          id="Job_Content"
           class="timesheet-input"
           maxlength="300"
           v-model="timesheetObj.job_content"
@@ -117,11 +121,12 @@
         </div>
       </div>
     </div>
-    <div class="timesheet-panel" v-show="!isShow">
+    <div id="TP_Askleave_Type" class="timesheet-panel" v-show="!isShow">
       <i class="material-icons">developer_board</i>
       <div class="timesheet-content">
         <label class="lbl-title">请假类型</label>
         <select
+          id="Askleave_Type"
           class="timesheet-select"
           name=""
           v-model="timesheetObj.askleave_type"
@@ -139,11 +144,12 @@
         </div>
       </div>
     </div>
-    <div class="timesheet-panel" v-show="!isShow">
+    <div id="TP_Askleave_Time" class="timesheet-panel" v-show="!isShow">
       <i class="material-icons">alarm_off</i>
       <div class="timesheet-content">
         <label class="lbl-title">请假工时</label>
         <input
+          id="Askleave_Time"
           type="text"
           maxlength="3"
           class="timesheet-input"
@@ -154,11 +160,12 @@
         </div>
       </div>
     </div>
-    <div class="timesheet-panel" v-show="!isShow">
+    <div id="TP_Askleave_Reason" class="timesheet-panel" v-show="!isShow">
       <i class="material-icons">content_paste</i>
       <div class="timesheet-content">
         <label class="lbl-title">请假理由</label>
         <textarea
+          id="Askleave_Reason"
           name="name"
           rows="2"
           class="timesheet-input"
@@ -171,107 +178,6 @@
         </div>
       </div>
     </div>
-      <!-- <mu-select-field
-        v-model="timesheetObj.techplatform_type"
-        ref="dataTechnologyPlatform"
-        hintText="技术平台"
-        label="技术平台"
-        icon="card_travel"
-        labelFloat
-        fullWidth
-        @input="handleTechnologyPlatformTypeInput"
-      >
-      <mu-menu-item v-for = "(item,index) in technologyPlatformList" :value="item.value" :title="item.name" :key="index" />
-      </mu-select-field>
-      <mu-select-field
-        v-model="timesheetObj.project_id"
-        ref="dataProjectType"
-        hintText="项目名称"
-        label="项目名称"
-        icon="card_travel"
-        labelFloat
-        fullWidth
-        @input="handleProjectInput"
-        @open="handleProject"
-        id="mm_project"
-      >
-      <mu-menu-item style="border:1px solid red;"
-        v-for = "(item,index) in projectObjList"
-        :label ="item.group_leader_id"
-        :value="item.project_id"
-        :title="item.project_id"
-        :key="index"/>
-      </mu-select-field>
-      <mu-select-field
-        v-model="timesheetObj.workstate_type"
-        hintText="工作状态"
-        label="工作状态"
-        icon="developer_board"
-        labelFloat
-        fullWidth
-        @input="handleWorkStatusInput"
-      >
-      <mu-menu-item v-for = "(item,index) in workStatusList" :value="item.value" :title="item.name" :key="index" />
-      </mu-select-field>
-      <mu-text-field
-        v-model="timesheetObj.normal_time"
-        v-show="isShow"
-        hintText="工时"
-        label="工时"
-        icon="alarm_on"
-        labelFloat
-        fullWidth
-      />
-      <mu-text-field
-        v-model="timesheetObj.overwork_time"
-        v-show="isShow"
-        hintText="加班时间"
-        label="加班时间"
-        icon="alarm_add"
-        labelFloat
-        fullWidth
-      />
-      <mu-text-field
-        v-model="timesheetObj.job_content"
-        v-show="isShow"
-        hintText="工作内容"
-        label="工作内容"
-        multiLine
-        icon="content_paste"
-        labelFloat
-        fullWidth
-      />
-      <mu-select-field
-        v-model="timesheetObj.askleave_type"
-        v-show="!isShow"
-        hintText="请假类型"
-        label="请假类型"
-        icon="developer_board"
-        labelFloat
-        fullWidth
-        @input="handleLeaveTypeInput"
-      >
-        <mu-menu-item v-for = "(item,index) in leaveTypeList" :value="item.value" :title="item.name" :key="index" />
-      </mu-select-field>
-      <mu-text-field
-        v-model="timesheetObj.askleave_time"
-        v-show="!isShow"
-        hintText="请假工时"
-        label="请假工时"
-        icon="alarm_off"
-        labelFloat
-        fullWidth
-      />
-      <mu-text-field
-        v-model="timesheetObj.askleave_reason"
-        v-show="!isShow"
-        hintText="请假理由"
-        label="请假理由"
-        multiLine
-        icon="content_paste"
-        labelFloat
-        fullWidth
-      /> -->
   </mu-card>
 </form>
 </template>
@@ -279,6 +185,9 @@
 <script>
 import axios from 'axios'
 export default {
+  props: {
+    'currentDate': String
+  },
   name: 'AddworkhoureTimesheet',
   data () {
     return {
@@ -293,13 +202,13 @@ export default {
         user_name: '',
         project_id: '',
         project_name: '',
-        techplatform_type: '',
-        workstate_type: '',
+        techplatform_type: '1',
+        workstate_type: '1',
         date: '',
         normal_time: '8',
         overwork_time: '',
         job_content: '',
-        askleave_type: '',
+        askleave_type: '1',
         askleave_time: '',
         askleave_reason: '',
         check_status: '1',
@@ -311,6 +220,35 @@ export default {
     // 获取技术平台
     getTechnologyPlatform () {
       axios.get('../../attendance/mock/technologyplatformtype.json').then(this.handleGetTechnologyPlatformType)
+    },
+    // 自定义处理技术平台
+    defTPT (e) {
+      console.log(e)
+      this.timesheetObj.techplatform_type = e
+    },
+    // // 自定义处理项目
+    // defProject (pId, pName, checkId) {
+    //   console.log(pId, pName, checkId)
+    //   this.projectType = pId
+    //   this.timesheetObj.project_id = pId
+    //   this.timesheetObj.project_name = pName
+    //   this.timesheetObj.check_id = checkId
+    // },
+    defWorkStatus (e) {
+      if (e === '7') {
+        this.isShow = false
+        this.timesheetObj.normal_time = ''
+        this.timesheetObj.overwork_time = ''
+        this.timesheetObj.job_content = ''
+        this.timesheetObj.askleave_type = '1'
+        this.timesheetObj.workstate_type = e
+      } else {
+        this.isShow = true
+        this.timesheetObj.askleave_time = ''
+        this.timesheetObj.askleave_reason = ''
+        this.timesheetObj.askleave_type = ''
+        this.timesheetObj.workstate_type = e
+      }
     },
     // 获取项目名称
     getProject () {
@@ -359,7 +297,7 @@ export default {
     handleGetTechnologyPlatformType (res) {
       if (res.data.status === '0' && res.data) {
         this.technologyPlatformList = res.data.result
-        this.timesheetObj.techplatform_type = '1'
+        // this.timesheetObj.techplatform_type = '1'
       }
     },
     // 处理项目名称
@@ -392,7 +330,8 @@ export default {
           if (sliceData) {
             let processData = (new Function('return' + sliceData))()
             this.workStatusList = processData.rows
-            this.timesheetObj.workstate_type = '1'
+            // this.timesheetObj.workstate_type = '1'
+            // this.timesheetObj.askleave_type = ''
           } else {
             console.log(sliceData)
           }
@@ -417,7 +356,7 @@ export default {
     // 监听项目名称input事件
     handleProjectInput (e) {
       let _this = e.target
-      let projectId = _this.options[_this.selectedIndex].text
+      let projectId = _this.options[_this.selectedIndex].value
       let projectName = _this.options[_this.selectedIndex].title
       let groupLeaderId = _this.options[_this.selectedIndex].getAttribute('dataGroupLeaderId')
       this.timesheetObj.project_id = projectId
@@ -426,15 +365,18 @@ export default {
     },
     // 监听工作状态input事件
     handleWorkStatusInput () {
+      console.log(this.timesheetObj.workstate_type)
       if (this.timesheetObj.workstate_type === '7') {
         this.isShow = false
         this.timesheetObj.normal_time = ''
         this.timesheetObj.overwork_time = ''
         this.timesheetObj.job_content = ''
+        this.timesheetObj.askleave_type = '1'
       } else {
         this.isShow = true
         this.timesheetObj.askleave_time = ''
         this.timesheetObj.askleave_reason = ''
+        this.timesheetObj.askleave_type = ''
       }
     },
     // 监听请假类型input事件
@@ -445,11 +387,12 @@ export default {
       this.$emit('deleteTimesheet', event.target.offsetParent.parentNode)
     }
   },
-  mounted () {
+  created () {
     this.getTechnologyPlatform()
     this.getProject()
     this.getWorkStatus()
     this.getLeaveType()
+    this.timesheetObj.date = this.currentDate
     this.timesheetObj.user_id = sessionStorage.getItem('user_id')
     this.timesheetObj.user_name = sessionStorage.getItem('user_name')
     console.log('被创建')

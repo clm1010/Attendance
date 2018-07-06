@@ -110,11 +110,10 @@ export default {
   methods: {
     // 获取审批个人信息列表
     getApprovalPersonalInfoTableData () {
-      let personelInfo = this.$route.params.personnelinfo
       let userId = sessionStorage.getItem('user_id')
-      let month = sessionStorage.getItem('month')
+      let month = this.$route.params.month
       try {
-        if (personelInfo) {
+        if (month !== '' && userId !== '') {
           let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetailList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month></m:queryAttendanceDetailList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
@@ -126,7 +125,8 @@ export default {
             console.log(error)
           })
         } else {
-          console.log('personelInfo:' + personelInfo)
+          console.log('userId:' + userId)
+          console.log('month:' + month)
         }
       } catch (e) {
         console.log(e)
@@ -221,13 +221,13 @@ export default {
       if (this.toastTimer) clearTimeout(this.toastTimer)
     },
     // 处理表格点击详情事件
-    handleClickEventDetails (params) {
-      console.log(params)
-      if (params.type === 'details') {
+    handleClickEventDetails (pars) {
+      console.log(pars)
+      if (pars.type === 'details') {
         this.$router.push({
           name: 'ApprovalPersonalDetails',
           params: {
-            personaldetailsid: params.rowData
+            pdid: pars.rowData.id
           }
         })
       }

@@ -39,15 +39,20 @@ export default {
   methods: {
     clickDay (dateparams, e) {
       let isCurrent = e.currentTarget.querySelector('li').className
+      let titleTimesheet = '添加工时'
       if (isCurrent.indexOf('mark1') !== -1 || isCurrent.indexOf('mark2') !== -1 || isCurrent.indexOf('wh_nextDayShow') !== -1) {
         console.log(isCurrent)
         return false
+      }
+      if (isCurrent.indexOf('mark3') !== -1) {
+        titleTimesheet = '修改工时'
       }
       console.log('选中了', dateparams) // 选中某天
       this.$router.push({
         name: 'Addworkhour',
         params: {
-          date: dateparams
+          date: dateparams,
+          title: titleTimesheet
         }
       })
     },
@@ -119,9 +124,9 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            // console.log(handleData)
+            console.log(handleData)
             this.arr = this.handelDate(handleData.rows)
-            // console.log(JSON.stringify(this.arr))
+            console.log(JSON.stringify(this.arr))
           } else {
             console.log(sliceData)
           }

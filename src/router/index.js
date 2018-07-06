@@ -29,12 +29,12 @@ export default new Router({
       component: Approval
     },
     {
-      path: '/approvalpersonalinfolist/:personnelinfo',
+      path: '/approvalpersonalinfolist/:month',
       name: 'ApprovalPersonalInfoList',
       component: ApprovalPersonalInfoList
     },
     {
-      path: '/approvalpersonaldetails/:personaldetailsid',
+      path: '/approvalpersonaldetails/:pdid',
       name: 'ApprovalPersonalDetails',
       component: ApprovalPersonalDetails
     },
