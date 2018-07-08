@@ -1,6 +1,6 @@
 # 考勤管理
 
-> 一个Vue.js项目
+> Attendance
 
 ## 构建设置
 
@@ -17,6 +17,3 @@ npm run build
 # 建立生产和查看捆绑分析器报告
 npm run build --report
 ```
-
-有关如何工作的详细说明，请查看
-[guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

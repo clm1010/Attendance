@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api':{
-        changeOrigin: true,
-        target: 'http://localhost:82/attence/webService/AttenceService?wsdl'
+        target: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+        pathRewrite: {"^/api" : ""}
       }
     },
 

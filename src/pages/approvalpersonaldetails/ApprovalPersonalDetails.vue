@@ -4,7 +4,7 @@
     <form ref="personalDetailsForm" :modle="personalDetailsObj" class="formBody" @submit.prevent="handleSubmit">
       <mu-card class="personal-details-card">
           <mu-text-field
-            v-model="personalDetailsObj.date"
+            v-model="personalDetailsObj.attenDate"
             hintText="日期"
             label="日期"
             icon="access_time"
@@ -99,14 +99,13 @@ export default {
   data () {
     return {
       isShow: true,
-      personalDetailsObj: {}
+      personalDetailsObj: []
     }
   },
   methods: {
     getApprovalPersonalDetails () {
       try {
         let pdId = this.$route.params.pdid
-        console.log(pdId)
         if (pdId !== '') {
           let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetail xmlns:m='http://webservice.attence.com/'><id type='String'>${pdId}</id></m:queryAttendanceDetail></soap:Body></soap:Envelope>`
           axios({
@@ -126,15 +125,13 @@ export default {
       }
     },
     handleGetApprovalPersonalDetails (res) {
-      console.log(res.data)
       try {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            console.log(handleData.date)
             this.personalDetailsObj = handleData
-            console.log(this.personalDetailsObj)
+            console.log(JSON.stringify(this.personalDetailsObj))
           } else {
             console.log(sliceData)
           }

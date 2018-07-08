@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     getAjaxUpdateTimesheet () {
-      axios.get('../../attendance/mock/timesheet.json').then(this.handleGetUpdateTimesheet)
+      // axios.get('../../attendance/mock/timesheet.json').then(this.handleGetUpdateTimesheet)
     },
     handleGetUpdateTimesheet (res) {
       if (res.data.status === '0' && res.data) {
@@ -73,29 +73,93 @@ export default {
     },
     // 提交全部工时表单
     handleSubmit () {
-      this.submitAllTimesheetList = []
-      let allNormalTime = 0
-      let overworkTime = 0
-      let allTime = 0
-      // console.log(this.addTimesheetList.length)
-      for (let i = 0; i < this.addTimesheetList.length; i++) {
-        console.log(this.$refs.addTimesheet[i].timesheetObj)
-        allNormalTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time)
-        overworkTime += Number(this.$refs.addTimesheet[i].timesheetObj.overwork_time)
-        allTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time) + Number(this.$refs.addTimesheet[i].timesheetObj.overwork_time)
-        if (allNormalTime > 11 || overworkTime > 11 || allTime > 11) {
-          this.toast = true
-          this.message = '全部工时时间或加班工时不能超过12小时'
-          if (this.toastTimer) {
-            clearTimeout(this.toastTimer)
+      try {
+        this.submitAllTimesheetList = []
+        let allNormalTime = 0
+        let overworkTime = 0
+        let allTime = 0
+        // /^[1-9]\d*$/.test(value);
+        // console.log(this.addTimesheetList.length)
+        for (let i = 0; i < this.addTimesheetList.length; i++) {
+          if (this.$refs.addTimesheet[i].timesheetObj.normal_time.replace(/^[1-9]\d*$/g, '')) {
+            this.toast = true
+            this.message = '请填写正确工时！'
+            if (this.toastTimer) {
+              clearTimeout(this.toastTimer)
+            }
+            this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+            return false
           }
-          this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
-          return false
+          console.log(this.$refs.addTimesheet[i].timesheetObj.workstate_type)
+          allNormalTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time)
+          overworkTime += Number(this.$refs.addTimesheet[i].timesheetObj.overwork_time)
+          allTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time) + Number(this.$refs.addTimesheet[i].timesheetObj.overwork_time)
+          if (allNormalTime > 11 || overworkTime > 11 || allTime > 11) {
+            this.toast = true
+            this.message = '全部工时时间或加班工时不能超过12小时！'
+            if (this.toastTimer) {
+              clearTimeout(this.toastTimer)
+            }
+            this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+            return false
+          }
+          if (this.$refs.addTimesheet[i].timesheetObj.workstate_type !== '7' && !allNormalTime) {
+            this.toast = true
+            this.message = '请填写工时！'
+            if (this.toastTimer) {
+              clearTimeout(this.toastTimer)
+            }
+            this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+            return false
+          }
+
+          if (this.$refs.addTimesheet[i].timesheetObj.workstate_type !== '7' && allNormalTime > 8) {
+            this.toast = true
+            this.message = '工时不能超过8小时！'
+            if (this.toastTimer) {
+              clearTimeout(this.toastTimer)
+            }
+            this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+            return false
+          }
+
+          if (this.$refs.addTimesheet[i].timesheetObj.workstate_type === '7' && !this.$refs.addTimesheet[i].timesheetObj.askleave_time) {
+            this.toast = true
+            this.message = '请填写请假工时！'
+            if (this.toastTimer) {
+              clearTimeout(this.toastTimer)
+            }
+            this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+            return false
+          }
+
+          if (this.$refs.addTimesheet[i].timesheetObj.workstate_type === '7' && this.$refs.addTimesheet[i].timesheetObj.askleave_time.replace(/^[1-9]\d*$/g, '')) {
+            this.toast = true
+            this.message = '请填写正确请假工时！'
+            if (this.toastTimer) {
+              clearTimeout(this.toastTimer)
+            }
+            this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+            return false
+          }
+          console.log(Number(this.$refs.addTimesheet[i].timesheetObj.askleave_time))
+          if (this.$refs.addTimesheet[i].timesheetObj.workstate_type === '7' && Number(this.$refs.addTimesheet[i].timesheetObj.askleave_time) > 8) {
+            this.toast = true
+            this.message = '请假工时不能超过8小时！'
+            if (this.toastTimer) {
+              clearTimeout(this.toastTimer)
+            }
+            this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+            return false
+          }
+
+          this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
         }
-        this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
+        this.handlePOSTSubmit(this.submitAllTimesheetList)
+        // this.$router.push('/attendance')
+      } catch (e) {
+        console.log(e)
       }
-      this.handlePOSTSubmit(this.submitAllTimesheetList)
-      // this.$router.push('/attendance')
     },
     handlePOSTSubmit (data) {
       try {
@@ -140,17 +204,19 @@ export default {
     this.getAjaxUpdateTimesheet()
   },
   updated () {
-    for (let i = 0; i < this.addTimesheetList.length; i++) {
-      this.$refs.addTimesheet[i].defTPT(this.updateData[i].techplatform_type)
-      this.$refs.addTimesheet[i].defWorkStatus(this.updateData[i].workstate_type)
-      // this.$refs.addTimesheet[j].defProject(this.updateData[j].project_id, this.updateData[j].project_name, this.updateData[j].check_id)
-      // console.log(this.$refs.addTimesheet[j].timesheetObj.user_name)
-      // console.log(this.$refs.addTimesheet[j].$el)
+    if (this.updateData.length !== 0) {
+      for (let i = 0; i < this.addTimesheetList.length; i++) {
+        this.$refs.addTimesheet[i].defTPT(this.updateData[i].techplatform_type)
+        this.$refs.addTimesheet[i].defWorkStatus(this.updateData[i].workstate_type)
+        // this.$refs.addTimesheet[j].defProject(this.updateData[j].project_id, this.updateData[j].project_name, this.updateData[j].check_id)
+        // console.log(this.$refs.addTimesheet[j].timesheetObj.user_name)
+        // console.log(this.$refs.addTimesheet[j].$el)
+      }
+      // for (let j = 0; j < this.addTimesheetList.length; j++) {
+      //   console.log(this.$refs.addTimesheet[j].$el[0])
+      //   this.$refs.addTimesheet[j].$el[0].style.display = 'none'
+      // }
     }
-    // for (let j = 0; j < this.addTimesheetList.length; j++) {
-    //   console.log(this.$refs.addTimesheet[j].$el[0])
-    //   this.$refs.addTimesheet[j].$el[0].style.display = 'none'
-    // }
   }
 }
 </script>
@@ -182,6 +248,7 @@ export default {
     right:0;
     left:0;
     margin:auto;
-    bottom:2rem;
-    width:6rem;
+    bottom:3rem;
+    font-size:.35rem;
+    width:95%;
 </style>
