@@ -111,7 +111,7 @@ export default {
           axios({
             method: 'POST',
             url: '/api',
-            // url: '/attence/webService/AttenceService?wsdl',
+            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetApprovalPersonalDetails).catch(function (error) {

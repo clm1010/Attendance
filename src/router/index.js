@@ -49,7 +49,7 @@ export default new Router({
       component: Remind
     },
     {
-      path: '/addworkhour/:date',
+      path: '/addworkhour',
       name: 'Addworkhour',
       component: Addworkhour
     }

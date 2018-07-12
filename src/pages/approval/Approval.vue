@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="approval-main">
   <approval-header></approval-header>
   <div class="search-approval">
     <mu-dropDown-menu menuClass="menuClass" autoWidth  :value="monthValue"  @change="handleMonthChange">
@@ -160,7 +160,7 @@ export default {
           axios({
             method: 'POST',
             url: '/api',
-            // url: '/attence/webService/AttenceService?wsdl',
+            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetApprovalTableData).catch(function (error) {
@@ -304,51 +304,51 @@ Vue.component('table-operation', {
 })
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import '~@/assets/styles/varibles.styl'
-  .title-cell-class-header
+  .approval-main >>> .title-cell-class-header
      background-color: $bgColor;
      color:#FFF;
-  .column-cell-class-name-two
+  .approval-main >>> .column-cell-class-name-two
      /* background-color: #d8eeff; */
-  .btn-details
+  .approval-main >>> .btn-details
     width: 100%;
     text-align: center;
     color: #FFF;
     background-color: $bgColor;
-  .mu-toast
+  .approval-main >>> .mu-toast
     text-align:center;
-    background-color:rgba(33,150,240,.8);
+    background-color:$bgColor;
     right:0;
     left:0;
     margin:auto;
     bottom:2rem;
     width:4rem;
-  .flexbox-btn-approval
-    text-align:right;
-    .btn-approval
-      margin:.2rem .1rem;
-  .search-approval
+  .approval-main >>> .flexbox-btn-approval
+    text-align:right !important;
+  .approval-main >>> .btn-approval
+    margin:.2rem .1rem;
+  .approval-main >>> .search-approval
     display: flex;
     text-align: center;
     margin: .2rem 0;
     padding: 0 .1rem;
-  .mu-dropDown-menu-text
+  .approval-main >>> .mu-dropDown-menu-text
     color: $bgColor;
-  .mu-dropDown-menu
+  .approval-main >>> .mu-dropDown-menu
     flex: 1;
     color:red;
     height: .8rem;
     font-size: .3rem;
-  .mu-menu-list
+  .approval-main >>> .mu-menu-list
     border: 1px solid $bgColor;
-  .mu-dropDown-menu-text
+  .approval-main >>> .mu-dropDown-menu-text
     padding:0 0;
     line-height:.7rem;
-  .mu-dropDown-menu-icon
+  .approval-main >>> .mu-dropDown-menu-icon
     top:.1rem;
     right: 0;
-  .approval-search-text
+  .approval-main >>> .approval-search-text
     flex: 2;
     margin: 0 .2rem;
 </style>

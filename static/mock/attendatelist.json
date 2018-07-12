@@ -3,24 +3,31 @@
   "msg": "",
   "result": [{
     "date": "2018-07-01",
-    "check_status": "1"
+    "check_status": "1",
+    "isworkday": "false"
   }, {
     "date": "2018-07-02",
-    "check_status": "1"
+    "check_status": "1",
+    "isworkday": "true"
   }, {
     "date": "2018-07-15",
-    "check_status": "1"
+    "check_status": "1",
+    "isworkday": "false"
   }, {
     "date": "2018-07-18",
-    "check_status": "2"
+    "check_status": "2",
+    "isworkday": "true"
   }, {
     "date": "2018-07-24",
-    "check_status": "3"
+    "check_status": "3",
+    "isworkday": "true"
   }, {
     "date": "2018-07-27",
-    "check_status": "2"
+    "check_status": "2",
+    "isworkday": "true"
   }, {
     "date": "2018-07-30",
-    "check_status": "3"
+    "check_status": "3",
+    "isworkday": "true"
   }]
 }

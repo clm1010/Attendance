@@ -24,7 +24,7 @@ export default {
     // 获取员工信息
     getQueryUserInfoFor () {
       try {
-        let pid = 'P0005338'
+        let pid = 'P0121142'
         if (pid) {
           sessionStorage.setItem('pid', pid)
           let postdata =
@@ -32,7 +32,7 @@ export default {
           axios({
             method: 'POST',
             url: '/api',
-            // url: '/attence/webService/AttenceService?wsdl',
+            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -54,6 +54,7 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
+            console.log(handleData)
             this.userId = handleData.user_id
             this.userName = handleData.user_name
             this.userNum = handleData.user_num

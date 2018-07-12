@@ -28,6 +28,7 @@
     <div class="timesheet-panel">
       <i class="material-icons">card_travel</i>
       <div class="timesheet-content">
+        <!-- :defProject="defProject" -->
         <label class="lbl-title">项目名称</label>
         <select
           class="timesheet-select"
@@ -57,7 +58,7 @@
           id="Workstate_Type"
           class="timesheet-select"
           v-model="timesheetObj.workstate_type"
-          :defProject="defWorkStatus"
+          :defWorkStatus="defWorkStatus"
           @change="handleWorkStatusInput"
         >
           <option
@@ -208,7 +209,7 @@ export default {
         normal_time: '8',
         overwork_time: '',
         job_content: '',
-        askleave_type: '1',
+        askleave_type: '',
         askleave_time: '',
         askleave_reason: '',
         check_status: '1',
@@ -223,10 +224,9 @@ export default {
     },
     // 自定义处理技术平台
     defTPT (e) {
-      console.log(e)
       this.timesheetObj.techplatform_type = e
     },
-    // // 自定义处理项目
+    // 自定义处理项目
     // defProject (pId, pName, checkId) {
     //   console.log(pId, pName, checkId)
     //   this.projectType = pId
@@ -234,20 +234,25 @@ export default {
     //   this.timesheetObj.project_name = pName
     //   this.timesheetObj.check_id = checkId
     // },
-    defWorkStatus (e) {
-      if (e === '7') {
+    defWorkStatus (workstateType, askleaveType, askleaveTime, askleaveReason, normalTime, overworkTime, jobContent) {
+      if (workstateType === '7') {
         this.isShow = false
         this.timesheetObj.normal_time = ''
         this.timesheetObj.overwork_time = ''
         this.timesheetObj.job_content = ''
-        this.timesheetObj.askleave_type = '1'
-        this.timesheetObj.workstate_type = e
+        this.timesheetObj.askleave_type = askleaveType
+        this.timesheetObj.askleave_time = askleaveTime
+        this.timesheetObj.askleave_reason = askleaveReason
+        this.timesheetObj.workstate_type = workstateType
       } else {
         this.isShow = true
         this.timesheetObj.askleave_time = ''
         this.timesheetObj.askleave_reason = ''
         this.timesheetObj.askleave_type = ''
-        this.timesheetObj.workstate_type = e
+        this.timesheetObj.workstate_type = workstateType
+        this.timesheetObj.normal_time = normalTime
+        this.timesheetObj.overwork_time = overworkTime
+        this.timesheetObj.job_content = jobContent
       }
     },
     // 获取项目名称
@@ -259,7 +264,7 @@ export default {
           axios({
             method: 'POST',
             url: '/api',
-            // url: '/attence/webService/AttenceService?wsdl',
+            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetProjectType).catch(function (error) {
@@ -280,7 +285,7 @@ export default {
         axios({
           method: 'POST',
           url: '/api',
-          // url: '/attence/webService/AttenceService?wsdl',
+          // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
           headers: { 'content-type': 'application/text; charset=utf-8' },
           data: postdata
         }).then(this.handleGetWorkStatus).catch(function (error) {
@@ -307,6 +312,7 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let processData = (new Function('return' + sliceData))()
+            console.log(JSON.stringify(processData.rows))
             this.projectObjList = processData.rows
             this.projectType = this.projectObjList[0].project_id
             this.timesheetObj.project_id = this.projectObjList[0].project_id
@@ -346,7 +352,7 @@ export default {
     handleGetLeaveType (res) {
       if (res.data.status === '0' && res.data) {
         this.leaveTypeList = res.data.result
-        this.timesheetObj.askleave_type = '1'
+        // this.timesheetObj.askleave_type = '1'
       }
     },
     // 监听技术平台类型input事件

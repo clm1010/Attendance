@@ -56,12 +56,13 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'attendance',
     assetsPublicPath: './',
-    proxyTable: {
-      '/api':{
-        changeOrigin: true,
-        target: 'http://localhost:82'
-      }
-    },
+    // proxyTable: {
+    //   '/api':{
+    //     changeOrigin: true,
+    //     target: 'http://localhost:82',
+    //     pathRewrite: {"^/api" : "/attence/webService/AttenceService?wsdl"}
+    //   }
+    // },
     /**
      * Source Maps
      */

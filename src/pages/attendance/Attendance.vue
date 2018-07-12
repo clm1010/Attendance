@@ -18,6 +18,7 @@
       </mu-flexbox-item>
     </mu-flexbox>
   </div>
+  <mu-toast v-if="toast" :message="message" @close="hideToast"/>
 </div>
 </template>
 
@@ -33,33 +34,56 @@ export default {
   },
   data () {
     return {
+      toast: false,
       arr: []
     }
   },
   methods: {
     clickDay (dateparams, e) {
       let isCurrent = e.currentTarget.querySelector('li').className
-      let titleTimesheet = '添加工时'
       if (isCurrent.indexOf('mark1') !== -1 || isCurrent.indexOf('mark2') !== -1 || isCurrent.indexOf('wh_nextDayShow') !== -1) {
-        console.log(isCurrent)
+        if (isCurrent.indexOf('mark1') !== -1) {
+          console.log(isCurrent)
+          this.toast = true
+          this.message = '工时审批中'
+          if (this.toastTimer) {
+            clearTimeout(this.toastTimer)
+          }
+          this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+          return false
+        }
+        if (isCurrent.indexOf('mark2') !== -1) {
+          this.toast = true
+          this.message = '工时已提交'
+          if (this.toastTimer) {
+            clearTimeout(this.toastTimer)
+          }
+          this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+          return false
+        }
         return false
       }
       if (isCurrent.indexOf('mark3') !== -1) {
-        titleTimesheet = '修改工时'
+        this.$store.dispatch('changeTimesheetTitle', '修改工时')
+      } else {
+        this.$store.dispatch('changeTimesheetTitle', '添加工时')
+      }
+      if (isCurrent.indexOf('workday-yes') !== -1) {
+        this.$store.dispatch('changeTimesheetIsWorkday', true)
+      }
+      if (isCurrent.indexOf('workday-no') !== -1) {
+        this.$store.dispatch('changeTimesheetIsWorkday', false)
       }
       console.log('选中了', dateparams) // 选中某天
-      this.$router.push({
-        name: 'Addworkhour',
-        params: {
-          date: dateparams,
-          title: titleTimesheet
-        }
-      })
+      this.$store.dispatch('changeTimesheetDate', dateparams.replace(/\//g, '-'))
+      this.$router.push('/addworkhour')
+      // this.$router.push({name: 'Addworkhour'})
     },
     clickToday (dateparams) {
       console.log('跳到了本月', dateparams) // 跳到了本月
     },
     changeDate (dateparams) {
+      // console.log(this.arr)
       // this.$toast('切换到的月份为' + dateparams)
       console.log(123)
       // return false
@@ -83,7 +107,7 @@ export default {
           axios({
             method: 'POST',
             url: '/api',
-            // url: '/attence/webService/AttenceService?wsdl',
+            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -107,13 +131,25 @@ export default {
       for (let i = 0; i < arry.length; i++) {
         arry[i].date = format(arry[i].date)
         if (arry[i].check_status === '1') {
+          // console.log(arry[i].check_status)
+          // arry[i].setAttribute('className', 'mark1')
           arry[i].className = 'mark1'
         }
         if (arry[i].check_status === '2') {
+          // arry[i].setAttribute('className', 'mark2')
           arry[i].className = 'mark2'
         }
         if (arry[i].check_status === '3') {
+          // arry[i].setAttribute('className', 'mark3')
           arry[i].className = 'mark3'
+        }
+        if (arry[i].isworkday === 'true') {
+          // arry[i].setAttribute('className', 'workday-yes')
+          arry[i].className += ' workday-yes'
+        }
+        if (arry[i].isworkday === 'false') {
+          // arry[i].setAttribute('className', 'workday-no')
+          arry[i].className += ' workday-no'
         }
       }
       return arry
@@ -124,7 +160,7 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            console.log(handleData)
+            // console.log(JSON.stringify(handleData.rows))
             this.arr = this.handelDate(handleData.rows)
             console.log(JSON.stringify(this.arr))
           } else {
@@ -137,10 +173,14 @@ export default {
         console.log(e)
       }
 
-      // if (res.data.status === '0' && res.data) {
-      //   this.arr = this.handelDate(res.data.result)
-      //   console.log(JSON.stringify(this.arr))
-      // }
+      if (res.data.status === '0' && res.data) {
+        this.arr = this.handelDate(res.data.result)
+        console.log(JSON.stringify(this.arr))
+      }
+    },
+    hideToast () {
+      this.toast = false
+      if (this.toastTimer) clearTimeout(this.toastTimer)
     }
   },
   mounted () {
@@ -216,4 +256,13 @@ export default {
         background-color: #3f3fff
       &:last-child
         background-color: #ff0400
+  .mu-toast
+    text-align:center;
+    background-color:$bgColor;
+    right:0;
+    left:0;
+    margin:auto;
+    bottom:2rem;
+    font-size:.35rem;
+    width:80%;
 </style>
