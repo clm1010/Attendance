@@ -1,10 +1,10 @@
 <template>
   <div>
     <approval-personal-details-header></approval-personal-details-header>
-    <form ref="personalDetailsForm" :modle="personalDetailsObj" class="formBody" @submit.prevent="handleSubmit">
+    <!-- <form ref="personalDetailsForm" :modle="personalDetailsObj" class="formBody"> -->
       <mu-card class="personal-details-card">
           <mu-text-field
-            v-model="personalDetailsObj.attenDate"
+            v-model="personalDetailsObj.dateStr"
             hintText="日期"
             label="日期"
             icon="access_time"
@@ -60,7 +60,7 @@
             disabled
           />
           <mu-text-field
-            v-model="personalDetailsObj.askleaveType"
+            v-model="personalDetailsObj.askleaveTime"
             hintText="请假工时"
             label="请假工时"
             multiLine
@@ -70,7 +70,7 @@
             disabled
           />
           <mu-text-field
-            v-model="personalDetailsObj.askleaveType"
+            v-model="personalDetailsObj.askleaveReason"
             hintText="请假理由"
             label="请假理由"
             multiLine
@@ -79,12 +79,12 @@
             fullWidth
             disabled
           />
-          <mu-card-actions class="personal-details-footer">
-            <mu-raised-button type="submit" label="通过" class="demo-raised-button" primary/>
-            <mu-raised-button type="submit" label="拒绝" class="demo-raised-button" secondary/>
+          <mu-card-actions class="personal-details-footer" v-show='isShow'>
+            <mu-raised-button  type="button" label="通过" @click="handleSubmitApprovalPD('2')" class="demo-raised-button" primary/>
+            <mu-raised-button type="button" label="拒绝" @click="handleSubmitApprovalPD('3')" class="demo-raised-button" secondary/>
           </mu-card-actions>
       </mu-card>
-    </form>
+    <!-- </form> -->
   </div>
 </template>
 
@@ -131,7 +131,9 @@ export default {
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
             this.personalDetailsObj = handleData
-            console.log(JSON.stringify(this.personalDetailsObj))
+            if (this.personalDetailsObj.checkStatus !== '1') {
+              this.isShow = false
+            }
           } else {
             console.log(sliceData)
           }
@@ -142,11 +144,29 @@ export default {
         console.log(e)
       }
     },
-    handleSubmit (e) {
-      console.log(e.target)
-      console.log(JSON.stringify(this.personalDetailsObj))
+    handleSubmitApprovalPD (pas) {
+      try {
+        let id = this.personalDetailsObj.id
+        console.log(JSON.stringify(this.personalDetailsObj))
+        let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:updateAttendByIds xmlns:m='http://webservice.attence.com/'><ids type='String'>${id}</ids><status>${pas}</status></m:updateAttendByIds></soap:Body></soap:Envelope>`
+        axios({
+          method: 'POST',
+          url: '/api',
+          // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+          headers: { 'content-type': 'application/text; charset=utf-8' },
+          data: postdata
+        }).then(this.handleSubmitAPDRes).catch(function (error) {
+          console.log(error)
+        })
+      } catch (e) {
+        console.log(e)
+      }
+      // console.log(e.target)
       this.$router.go(-1)
     }
+  },
+  handleSubmitAPDRes (res) {
+    console.log(res)
   },
   mounted () {
     this.getApprovalPersonalDetails()

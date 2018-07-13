@@ -49,16 +49,59 @@ export default {
   },
   methods: {
     getAjaxUpdateTimesheet () {
+      try {
+        let userId = sessionStorage.getItem('user_id')
+        if (userId) {
+          let postdata =
+            `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date></m:queryUserAttendanceList></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: '/attence/webService/AttenceService?wsdl',
+            headers: {
+              'content-type': 'application/text; charset=utf-8'
+            },
+            data: postdata
+          }).then(this.handleGetUpdateTimesheet).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('userId: ' + userId)
+        }
+      } catch (e) {
+        console.log(e)
+      }
       // axios.get('../../attendance/mock/timesheet.json').then(this.handleGetUpdateTimesheet)
     },
     handleGetUpdateTimesheet (res) {
-      if (res.data.status === '0' && res.data) {
-        let result = res.data.result
-        for (let i = 1; i < result.length; i++) {
-          this.handleAddTimesheet('AddworkhoureTimesheet')
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let handleData = (new Function('return' + sliceData))()
+            // if (!handleData) {
+              let result = handleData.rows
+              for (let i = 1; i < result.length; i++) {
+                this.handleAddTimesheet('AddworkhoureTimesheet')
+              // }
+              this.updateData = result
+            }
+          } else {
+            console.log(sliceData)
+          }
+        } else {
+          console.log(res.data)
         }
-        this.updateData = result
+      } catch (e) {
+        console.log(e)
       }
+      // if (res.data.status === '0' && res.data) {
+      //   let result = res.data.result
+      //   for (let i = 1; i < result.length; i++) {
+      //     this.handleAddTimesheet('AddworkhoureTimesheet')
+      //   }
+      //   this.updateData = result
+      // }
     },
     handleAddTimesheet (addworkhoureTimesheet) {
       this.addTimesheetList.push({
@@ -196,6 +239,7 @@ export default {
             this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
           }
           this.handlePOSTSubmit(this.submitAllTimesheetList)
+          this.$router.push('/attendance')
         }
         // /^[1-9]\d*$/.test(value);
         // console.log(this.addTimesheetList.length)
@@ -239,30 +283,30 @@ export default {
     },
     handlePOSTSubmit (data) {
       console.log(JSON.stringify(data))
-      // try {
-      //   let userId = sessionStorage.getItem('user_id')
-      //   if (userId && data != null) {
-      //     console.log(JSON.stringify(data))
-      //     let dataStr = JSON.stringify(data)
-      //     let postdata =
-      //       `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
-      //     axios({
-      //       method: 'POST',
-      //       url: '/api',
-      //       // url: '/attence/webService/AttenceService?wsdl',
-      //       headers: {
-      //         'content-type': 'application/text; charset=utf-8'
-      //       },
-      //       data: postdata
-      //     }).then(this.handleGetPOSTSubmit).catch(function (error) {
-      //       console.log(error)
-      //     })
-      //   } else {
-      //     console.log('userId: ' + userId)
-      //   }
-      // } catch (e) {
-      //   console.log(e)
-      // }
+      try {
+        let userId = sessionStorage.getItem('user_id')
+        if (userId && data != null) {
+          console.log(JSON.stringify(data))
+          let dataStr = JSON.stringify(data)
+          let postdata =
+            `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: '/attence/webService/AttenceService?wsdl',
+            headers: {
+              'content-type': 'application/text; charset=utf-8'
+            },
+            data: postdata
+          }).then(this.handleGetPOSTSubmit).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('userId: ' + userId)
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
     handleGetPOSTSubmit (res) {
       console.log(res)
@@ -284,17 +328,30 @@ export default {
   updated () {
     if (this.updateData.length !== 0) {
       try {
-        // console.log(JSON.stringify(this.updateData))
+        console.log(JSON.stringify(this.updateData))
         for (let i = 0; i < this.addTimesheetList.length; i++) {
-          // console.log(this.updateData[i].techplatform_type)
           this.$refs.addTimesheet[i].defTPT(this.updateData[i].techplatform_type)
-          // this.$refs.addTimesheet[i].defProject(this.updateData[i].project_id, this.updateData[i].project_name, this.updateData[i].check_id)
+          this.$refs.addTimesheet[i].defProject(this.updateData[i].project_id, this.updateData[i].project_name, this.updateData[i].check_id)
           this.$refs.addTimesheet[i].defWorkStatus(this.updateData[i].workstate_type, this.updateData[i].askleave_type, this.updateData[i].askleave_time, this.updateData[i].askleave_reason, this.updateData[i].normal_time, this.updateData[i].overwork_time, this.updateData[i].job_content)
-          // console.log(this.$refs.addTimesheet[j].$el)
+          this.$refs.addTimesheet[i].defCheckStatus(this.updateData[i].check_status)
+          // console.log(this.$refs.addTimesheet[i].$el)
         }
         for (let j = 0; j < this.addTimesheetList.length; j++) {
           // console.log(this.$refs.addTimesheet[j].$el[0])
           this.$refs.addTimesheet[j].$el[0].style.display = 'none'
+          console.log(this.updateData[j].check_status)
+          if (this.updateData[j].check_status === '1' || this.updateData[j].check_status === '2') {
+            this.$refs.addTimesheet[j].$el[1].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[2].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[3].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[4].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[5].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[6].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[7].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[8].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[9].disabled = 'disabled'
+            this.$refs.addTimesheet[j].$el[10].disabled = 'disabled'
+          }
         }
       } catch (e) {}
     }

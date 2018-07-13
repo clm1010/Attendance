@@ -5,187 +5,123 @@
     {
       "id": "001",
       "month": "5月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "user_name": "张1",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "002",
-      "month": "6月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张2",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "003",
-      "month": "7月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张3",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "004",
-      "month": "8月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张4",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "005",
-      "month": "9月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张5",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "006",
-      "month": "10月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张6",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "007",
-      "month": "10月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张7",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "008",
-      "month": "10月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张8",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "009",
-      "month": "11月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张9",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "010",
-      "month": "11月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张10",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "011",
-      "month": "11月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张11",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "012",
-      "month": "12月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张12",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "013",
-      "month": "12月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张13",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "014",
-      "month": "12月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "month": "5月",
+      "user_name": "张14",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }, {
       "id": "015",
-      "month": "1月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "016",
-      "month": "2月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "017",
-      "month": "3月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "018",
-      "month": "4月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "019",
       "month": "5月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "020",
-      "month": "6月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "021",
-      "month": "7月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "022",
-      "month": "8月",
-      "name": "张三",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
-    }, {
-      "id": "023",
-      "month": "9月",
-      "name": "李四",
-      "reportdays": "5天",
-      "submitteddays": "5天",
-      "unsubmitteddays": "0天",
-      "auditeddays": "0天"
+      "user_name": "张15",
+      "filled_cnt": "5天",
+      "submit_cnt": "5天",
+      "notSubmint_cnt": "0天",
+      "approved_cnt": "0天"
     }
   ]
 }

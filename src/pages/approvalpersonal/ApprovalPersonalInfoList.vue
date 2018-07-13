@@ -3,6 +3,7 @@
   <approval-personal-header></approval-personal-header>
   <v-table
     is-horizontal-resize style="width:100%"
+    :is-loading="isLoading"
     :columns="tableConfig.columns"
     :table-data="tableConfig.tableData"
     :column-cell-class-name="columnCellClass"
@@ -21,8 +22,8 @@
   ></v-pagination>
   <mu-flexbox class="flexbox-btn-approval" orient="vertical">
     <mu-flexbox-item>
-      <mu-raised-button label="审批通过" icon="check" class="btn-approval" @click="handleApprovalPassed" primary />
-      <mu-raised-button label="审批拒绝" icon="close" class="btn-approval" @click="handleApprovalReject" secondary />
+      <mu-raised-button label="审批通过" icon="check" class="btn-approval" @click="handleApprovalPassed('2')" primary />
+      <mu-raised-button label="审批拒绝" icon="close" class="btn-approval" @click="handleApprovalPassed('3')" secondary />
     </mu-flexbox-item>
   </mu-flexbox>
   <mu-toast v-if="toast" message="请选择一行数据" @close="hideToast"/>
@@ -41,9 +42,11 @@ export default {
   data () {
     return {
       toast: false,
+      isLoading: true,
       total: 0,
       pageIndex: 1,
       pageSize: 10,
+      approvalStr: '',
       approvalPersonalInfoTableList: [],
       tableConfig: {
         tableData: [],
@@ -147,6 +150,7 @@ export default {
               }
             }
             this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+            this.isLoading = false
           } else {
             console.log(sliceData)
           }
@@ -163,12 +167,24 @@ export default {
       // }
     },
     handleTableSelectAll (selection) {
-      this.approvalPersonalInfoTableList = selection
-      console.log('选择全部', JSON.stringify(this.approvalPersonalInfoTableList))
+      this.approvalPersonalInfoTableList = []
+      this.approvalStr = ''
+      for (var i = 0; i < selection.length; i++) {
+        this.approvalPersonalInfoTableList.push(selection[i].id)
+      }
+      this.approvalStr = this.approvalPersonalInfoTableList.join(',')
+      // this.approvalPersonalInfoTableList = selection
+      console.log('选择全部', this.approvalStr)
     },
     handleTableSelectChange (selection, rowData) {
-      this.approvalPersonalInfoTableList = selection
-      console.log('选择更改', JSON.stringify(this.approvalPersonalInfoTableList))
+      this.approvalPersonalInfoTableList = []
+      this.approvalStr = ''
+      for (var i = 0; i < selection.length; i++) {
+        this.approvalPersonalInfoTableList.push(selection[i].id)
+      }
+      this.approvalStr = this.approvalPersonalInfoTableList.join(',')
+      // this.approvalPersonalInfoTableList = selection
+      console.log('选择更改', this.approvalStr)
     },
     // 设置单元格样式名称
     columnCellClass (rowIndex, columnName, rowData) {
@@ -193,29 +209,52 @@ export default {
       this.getApprovalPersonalInfoTableData()
     },
     // 审批通过
-    handleApprovalPassed () {
-      if (this.approvalPersonalInfoTableList.length === 0) {
-        this.toast = true
-        if (this.toastTimer) {
-          clearTimeout(this.toastTimer)
+    handleApprovalPassed (pas) {
+      try {
+        if (this.approvalPersonalInfoTableList.length === 0) {
+          this.toast = true
+          if (this.toastTimer) {
+            clearTimeout(this.toastTimer)
+          }
+          this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
+          return false
         }
-        this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
-        return false
+        let id = this.approvalStr
+        console.log(id)
+        let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:updateAttendByIds xmlns:m='http://webservice.attence.com/'><ids type='String'>${id}</ids><status>${pas}</status></m:updateAttendByIds></soap:Body></soap:Envelope>`
+        axios({
+          method: 'POST',
+          url: '/api',
+          // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+          headers: { 'content-type': 'application/text; charset=utf-8' },
+          data: postdata
+        }).then(this.handleApprovalPassedRes).catch(function (error) {
+          console.log(error)
+        })
+      } catch (e) {
+        console.log(e)
       }
-      console.log('审批通过的数据: ', JSON.stringify(this.approvalPersonalInfoTableList))
+      // console.log(e.target)
+      // this.$router.go(-1)
+      // console.log('审批通过的数据: ', JSON.stringify(this.approvalPersonalInfoTableList))
+    },
+    // 审批通过或拒绝响应
+    handleApprovalPassedRes (res) {
+      // console.log(res)
+      this.$router.go(0)
     },
     // 审批拒绝
-    handleApprovalReject () {
-      if (this.approvalPersonalInfoTableList.length === 0) {
-        this.toast = true
-        if (this.toastTimer) {
-          clearTimeout(this.toastTimer)
-        }
-        this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
-        return false
-      }
-      console.log('审批通过的数据: ', JSON.stringify(this.approvalPersonalInfoTableList))
-    },
+    // handleApprovalReject () {
+    //   if (this.approvalPersonalInfoTableList.length === 0) {
+    //     this.toast = true
+    //     if (this.toastTimer) {
+    //       clearTimeout(this.toastTimer)
+    //     }
+    //     this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
+    //     return false
+    //   }
+    //   console.log('审批通过的数据: ', JSON.stringify(this.approvalPersonalInfoTableList))
+    // },
     hideToast () {
       this.toast = false
       if (this.toastTimer) clearTimeout(this.toastTimer)

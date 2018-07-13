@@ -34,6 +34,7 @@
           class="timesheet-select"
           name=""
           v-model="projectType"
+          :defProject="defProject"
           id="projectType"
           @change="handleProjectInput($event)"
         >
@@ -179,6 +180,14 @@
         </div>
       </div>
     </div>
+    <div class="timesheet-panel" style="display:none;">
+      <input
+        type="text"
+        class="timesheet-input"
+        v-model="timesheetObj.check_status"
+        :defCheckStatus="defCheckStatus"
+      />
+    </div>
   </mu-card>
 </form>
 </template>
@@ -227,13 +236,13 @@ export default {
       this.timesheetObj.techplatform_type = e
     },
     // 自定义处理项目
-    // defProject (pId, pName, checkId) {
-    //   console.log(pId, pName, checkId)
-    //   this.projectType = pId
-    //   this.timesheetObj.project_id = pId
-    //   this.timesheetObj.project_name = pName
-    //   this.timesheetObj.check_id = checkId
-    // },
+    defProject (pId, pName, checkId) {
+      console.log(pId, pName, checkId)
+      this.projectType = pId
+      this.timesheetObj.project_id = pId
+      this.timesheetObj.project_name = pName
+      this.timesheetObj.check_id = checkId
+    },
     defWorkStatus (workstateType, askleaveType, askleaveTime, askleaveReason, normalTime, overworkTime, jobContent) {
       if (workstateType === '7') {
         this.isShow = false
@@ -254,6 +263,12 @@ export default {
         this.timesheetObj.overwork_time = overworkTime
         this.timesheetObj.job_content = jobContent
       }
+    },
+    defCheckStatus (checkStatus) {
+      if (checkStatus === '3') {
+        checkStatus = '1'
+      }
+      this.timesheetObj.check_status = checkStatus
     },
     // 获取项目名称
     getProject () {
@@ -312,12 +327,13 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let processData = (new Function('return' + sliceData))()
-            console.log(JSON.stringify(processData.rows))
+            // console.log(JSON.stringify(processData.rows))
             this.projectObjList = processData.rows
-            this.projectType = this.projectObjList[0].project_id
-            this.timesheetObj.project_id = this.projectObjList[0].project_id
-            this.timesheetObj.project_name = this.projectObjList[0].project_name
-            this.timesheetObj.check_id = this.projectObjList[0].group_leader_id
+
+            // this.projectType = this.projectObjList[0].project_id
+            // this.timesheetObj.project_id = this.projectObjList[0].project_id
+            // this.timesheetObj.project_name = this.projectObjList[0].project_name
+            // this.timesheetObj.check_id = this.projectObjList[0].group_leader_id
           } else {
             console.log(sliceData)
           }
@@ -371,7 +387,7 @@ export default {
     },
     // 监听工作状态input事件
     handleWorkStatusInput () {
-      console.log(this.timesheetObj.workstate_type)
+      // console.log(this.timesheetObj.workstate_type)
       if (this.timesheetObj.workstate_type === '7') {
         this.isShow = false
         this.timesheetObj.normal_time = ''

@@ -16,11 +16,12 @@
       <mu-menu-item value="11" title="十一月"/>
       <mu-menu-item value="12" title="十二月"/>
     </mu-dropDown-menu>
-    <mu-text-field class="approval-search-text" hintText="请输入搜索内容"/>
-    <mu-raised-button label="查询" class="approval-search-button" primary/>
+    <mu-text-field class="approval-search-text" v-model="searchName" hintText="请输入姓名"/>
+    <mu-raised-button label="查询" @click="getApprovalTableData" class="approval-search-button" primary/>
   </div>
   <v-table
     is-horizontal-resize style="width:100%"
+    :is-loading="isLoading"
     :columns="tableConfig.columns"
     :table-data="tableConfig.tableData"
     :column-cell-class-name="columnCellClass"
@@ -58,7 +59,10 @@ export default {
   },
   data () {
     return {
+      isLoading: true,
       monthValue: '',
+      searchName: '',
+      approvalNameStr: '',
       toast: false,
       approvalPassedTableData: [],
       total: 0,
@@ -139,17 +143,32 @@ export default {
     // 处理监听日期框
     handleMonthChange (value) {
       this.monthValue = value
-      console.log(this.monthValue)
     },
     handleTableSelectAll (selection) {
-      this.approvalPassedTableData = selection
-      console.log('选择全部', JSON.stringify(this.approvalPassedTableData))
+      this.approvalPassedTableData = []
+      this.approvalNameStr = ''
+      for (var i = 0; i < selection.length; i++) {
+        this.approvalPassedTableData.push(selection[i].id)
+      }
+      this.approvalNameStr = this.approvalPassedTableData.join(',')
+      console.log('选择全部', this.approvalNameStr)
     },
     handleTableSelectChange (selection, rowData) {
-      this.approvalPassedTableData = selection
-      console.log('选择更改', JSON.stringify(this.approvalPassedTableData))
+      this.approvalPassedTableData = []
+      this.approvalNameStr = ''
+      for (var i = 0; i < selection.length; i++) {
+        this.approvalPassedTableData.push(selection[i].id)
+      }
+      this.approvalNameStr = this.approvalPassedTableData.join(',')
+      // this.approvalPassedTableData = selection
+      console.log('选择更改', this.approvalNameStr)
+    },
+    handleSearch () {
+      this.getApprovalTableData()
     },
     getApprovalTableData () {
+      console.log(this.monthValue)
+      console.log(this.searchName)
       try {
         let userId = sessionStorage.getItem('user_id')
         let userName = sessionStorage.getItem('user_name')
@@ -172,7 +191,7 @@ export default {
       } catch (e) {
         console.log(e)
       }
-
+      console.log(123)
       // axios.get('../../attendance/mock/approvaltablelist.json').then(this.handleGetApprovalTableData)
     },
     handleGetApprovalTableData (res) {
@@ -184,6 +203,7 @@ export default {
             let tableDataList = handleData.rows
             this.total = tableDataList.length
             this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+            this.isLoading = false
           } else {
             console.log(sliceData)
           }
@@ -199,6 +219,7 @@ export default {
       //   let tableDataList = res.data.result
       //   this.total = tableDataList.length
       //   this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+      //   this.isLoading = false
       // }
     },
     pageChange (pageIndex) {
@@ -233,7 +254,35 @@ export default {
         this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
         return false
       }
+      let userid = this.approvalNameStr
+      try {
+        let userId = sessionStorage.getItem('user_id')
+        let month = this.monthValue
+        console.log(typeof month)
+        if (userId) {
+          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:updateAttendByUserIdAndMonth xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month><status type='String'>2</status></m:updateAttendByUserIdAndMonth></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            url: '/api',
+            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+            headers: { 'content-type': 'application/text; charset=utf-8' },
+            data: postdata
+          }).then(this.handleApprovalPassedRes).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('user_id:' + userId, 'month:' + month)
+        }
+      } catch (e) {
+        console.log(e)
+      }
       console.log('审批通过的数据: ', JSON.stringify(this.approvalPassedTableData))
+      console.log('审批通过的数据字符串: ', userid)
+      this.getApprovalTableData()
+      this.$router.go(0)
+    },
+    handleApprovalPassedRes (res) {
+      console.log(res)
     },
     hideToast () {
       this.toast = false
@@ -349,6 +398,6 @@ Vue.component('table-operation', {
     top:.1rem;
     right: 0;
   .approval-main >>> .approval-search-text
-    flex: 2;
-    margin: 0 .2rem;
+    flex: 1;
+    margin: 0 .3rem;
 </style>

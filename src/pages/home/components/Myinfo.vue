@@ -54,7 +54,6 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            console.log(handleData)
             this.userId = handleData.user_id
             this.userName = handleData.user_name
             this.userNum = handleData.user_num

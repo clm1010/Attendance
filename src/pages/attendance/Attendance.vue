@@ -54,7 +54,7 @@ export default {
         }
         if (isCurrent.indexOf('mark2') !== -1) {
           this.toast = true
-          this.message = '工时已提交'
+          this.message = '工时已审批'
           if (this.toastTimer) {
             clearTimeout(this.toastTimer)
           }
@@ -74,8 +74,13 @@ export default {
       if (isCurrent.indexOf('workday-no') !== -1) {
         this.$store.dispatch('changeTimesheetIsWorkday', false)
       }
-      console.log('选中了', dateparams) // 选中某天
-      this.$store.dispatch('changeTimesheetDate', dateparams.replace(/\//g, '-'))
+
+      let timearr = dateparams.replace(/\//g, '-').split('-')
+      timearr[1] = timearr[1] < 10 ? '0' + timearr[1] : timearr[1]
+      timearr[2] = timearr[2] < 10 ? '0' + timearr[2] : timearr[2]
+      let selectDate = timearr[0] + '-' + timearr[1] + '-' + timearr[2]
+      console.log('选中了', selectDate) // 选中某天
+      this.$store.dispatch('changeTimesheetDate', selectDate)
       this.$router.push('/addworkhour')
       // this.$router.push({name: 'Addworkhour'})
     },
@@ -100,7 +105,6 @@ export default {
         let myDate = new Date()
         let month = myDate.getMonth() + 1 < 10 ? '0' + (myDate.getMonth() + 1) : myDate.getMonth() + 1
         let yearMonth = myDate.getFullYear() + '-' + month
-        console.log(yearMonth)
         if (userId) {
           let postdata =
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserCalendar xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><year_month type='String'>${yearMonth}</year_month></m:queryUserCalendar></soap:Body></soap:Envelope>`
@@ -130,25 +134,22 @@ export default {
       }
       for (let i = 0; i < arry.length; i++) {
         arry[i].date = format(arry[i].date)
-        if (arry[i].check_status === '1') {
-          // console.log(arry[i].check_status)
-          // arry[i].setAttribute('className', 'mark1')
+        if (arry[i].className === undefined) {
+          arry[i].className = ''
+        }
+        if (arry[i].check_status.indexOf('1') !== -1) {
           arry[i].className = 'mark1'
         }
-        if (arry[i].check_status === '2') {
-          // arry[i].setAttribute('className', 'mark2')
+        if (arry[i].check_status.indexOf('2') !== -1) {
           arry[i].className = 'mark2'
         }
-        if (arry[i].check_status === '3') {
-          // arry[i].setAttribute('className', 'mark3')
+        if (arry[i].check_status.indexOf('3') !== -1) {
           arry[i].className = 'mark3'
         }
         if (arry[i].isworkday === 'true') {
-          // arry[i].setAttribute('className', 'workday-yes')
           arry[i].className += ' workday-yes'
         }
         if (arry[i].isworkday === 'false') {
-          // arry[i].setAttribute('className', 'workday-no')
           arry[i].className += ' workday-no'
         }
       }
@@ -160,9 +161,9 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            // console.log(JSON.stringify(handleData.rows))
+            console.log(JSON.stringify(handleData.rows))
             this.arr = this.handelDate(handleData.rows)
-            console.log(JSON.stringify(this.arr))
+            // console.log(JSON.stringify(this.arr))
           } else {
             console.log(sliceData)
           }
@@ -173,10 +174,10 @@ export default {
         console.log(e)
       }
 
-      if (res.data.status === '0' && res.data) {
-        this.arr = this.handelDate(res.data.result)
-        console.log(JSON.stringify(this.arr))
-      }
+      // if (res.data.status === '0' && res.data) {
+      //   this.arr = this.handelDate(res.data.result)
+      //   console.log(JSON.stringify(this.arr))
+      // }
     },
     hideToast () {
       this.toast = false
