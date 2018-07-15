@@ -62,7 +62,7 @@ export default {
       isLoading: true,
       monthValue: '',
       searchName: '',
-      approvalNameStr: '',
+      approvalIdStr: '',
       toast: false,
       approvalPassedTableData: [],
       total: 0,
@@ -140,46 +140,53 @@ export default {
     }
   },
   methods: {
+    isEmptyObject (obj) {
+      for (var key in obj) {
+        return false
+      }
+      return true
+    },
     // 处理监听日期框
     handleMonthChange (value) {
       this.monthValue = value
     },
     handleTableSelectAll (selection) {
       this.approvalPassedTableData = []
-      this.approvalNameStr = ''
+      this.approvalIdStr = ''
       for (var i = 0; i < selection.length; i++) {
-        this.approvalPassedTableData.push(selection[i].id)
+        this.approvalPassedTableData.push(selection[i].user_id)
       }
-      this.approvalNameStr = this.approvalPassedTableData.join(',')
-      console.log('选择全部', this.approvalNameStr)
+      this.approvalIdStr = this.approvalPassedTableData.join(',')
+      console.log('选择全部', this.approvalIdStr)
+      console.log('选择全部', JSON.stringify(selection))
     },
     handleTableSelectChange (selection, rowData) {
       this.approvalPassedTableData = []
-      this.approvalNameStr = ''
+      this.approvalIdStr = ''
       for (var i = 0; i < selection.length; i++) {
-        this.approvalPassedTableData.push(selection[i].id)
+        this.approvalPassedTableData.push(selection[i].user_id)
       }
-      this.approvalNameStr = this.approvalPassedTableData.join(',')
+      this.approvalIdStr = this.approvalPassedTableData.join(',')
       // this.approvalPassedTableData = selection
-      console.log('选择更改', this.approvalNameStr)
+      console.log('选择更改', this.approvalIdStr)
     },
     handleSearch () {
       this.getApprovalTableData()
     },
     getApprovalTableData () {
-      console.log(this.monthValue)
-      console.log(this.searchName)
       try {
         let userId = sessionStorage.getItem('user_id')
-        let userName = sessionStorage.getItem('user_name')
+        // let userName = sessionStorage.getItem('user_name')
         let month = this.monthValue
-        // console.log(typeof month)
+        // console.log(month)
+        // console.log(this.searchName)
         if (userId) {
-          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAllAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month><name type='String'>${userName}</name></m:queryAllAttendanceList></soap:Body></soap:Envelope>`
+          let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAllAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month><name type='String'>${this.searchName}</name></m:queryAllAttendanceList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
+            // url: '/api',
             // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetApprovalTableData).catch(function (error) {
@@ -191,7 +198,6 @@ export default {
       } catch (e) {
         console.log(e)
       }
-      console.log(123)
       // axios.get('../../attendance/mock/approvaltablelist.json').then(this.handleGetApprovalTableData)
     },
     handleGetApprovalTableData (res) {
@@ -200,10 +206,15 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            let tableDataList = handleData.rows
-            this.total = tableDataList.length
-            this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
-            this.isLoading = false
+            if (!this.isEmptyObject(handleData)) {
+              let tableDataList = handleData.rows
+              console.log(tableDataList)
+              this.total = tableDataList.length
+              this.tableConfig.tableData = tableDataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+              this.isLoading = false
+            } else {
+              this.isLoading = false
+            }
           } else {
             console.log(sliceData)
           }
@@ -254,7 +265,7 @@ export default {
         this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
         return false
       }
-      let userid = this.approvalNameStr
+      let userid = this.approvalIdStr
       try {
         let userId = sessionStorage.getItem('user_id')
         let month = this.monthValue

@@ -4,6 +4,15 @@
     <!-- <form ref="personalDetailsForm" :modle="personalDetailsObj" class="formBody"> -->
       <mu-card class="personal-details-card">
           <mu-text-field
+            v-model="personalDetailsObj.userName"
+            hintText="姓名"
+            label="姓名"
+            icon="access_time"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
             v-model="personalDetailsObj.dateStr"
             hintText="日期"
             label="日期"
@@ -16,6 +25,15 @@
             v-model="personalDetailsObj.projectName"
             hintText="项目名称"
             label="项目名称"
+            icon="card_travel"
+            labelFloat
+            fullWidth
+            disabled
+          />
+          <mu-text-field
+            v-model="personalDetailsObj.workstateType"
+            hintText="工作状态"
+            label="工作状态"
             icon="card_travel"
             labelFloat
             fullWidth
@@ -79,6 +97,12 @@
             fullWidth
             disabled
           />
+          <template v-if="this.personalDetailsObj.checkStatus === '1'">
+            <mu-flat-button label="待审批工时" class="demo-flat-button" icon="android" primary/>
+            <mu-flat-button label="已批准工时" class="demo-flat-button" labelPosition="before" icon="folder" secondary/>
+            <mu-flat-button label="待审批工时" class="demo-flat-button" labelPosition="before" icon="folder" secondary/>
+            <mu-flat-button icon="android" class="demo-flat-button" backgroundColor="#a4c639" color="#FFF"/>
+          </template>
           <mu-card-actions class="personal-details-footer" v-show='isShow'>
             <mu-raised-button  type="button" label="通过" @click="handleSubmitApprovalPD('2')" class="demo-raised-button" primary/>
             <mu-raised-button type="button" label="拒绝" @click="handleSubmitApprovalPD('3')" class="demo-raised-button" secondary/>
@@ -110,8 +134,9 @@ export default {
           let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetail xmlns:m='http://webservice.attence.com/'><id type='String'>${pdId}</id></m:queryAttendanceDetail></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
+            // url: '/api',
             // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetApprovalPersonalDetails).catch(function (error) {
@@ -131,6 +156,7 @@ export default {
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
             this.personalDetailsObj = handleData
+            console.log(JSON.stringify(this.personalDetailsObj))
             if (this.personalDetailsObj.checkStatus !== '1') {
               this.isShow = false
             }

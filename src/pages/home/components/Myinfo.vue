@@ -31,8 +31,9 @@ export default {
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
+            // url: '/api',
             // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -49,6 +50,7 @@ export default {
     },
     // 处理查询用户信息
     handleQueryUserInfoFor (res) {
+      console.log(res.data)
       try {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
@@ -57,7 +59,7 @@ export default {
             this.userId = handleData.user_id
             this.userName = handleData.user_name
             this.userNum = handleData.user_num
-            this.userProject = handleData.user_project
+            this.userProject = handleData.user_project === 'null' ? '' : handleData.user_project
             sessionStorage.setItem('user_id', handleData.user_id)
             sessionStorage.setItem('user_name', handleData.user_name)
             sessionStorage.setItem('user_num', handleData.user_num)

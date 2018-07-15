@@ -51,13 +51,15 @@ export default {
     getAjaxUpdateTimesheet () {
       try {
         let userId = sessionStorage.getItem('user_id')
+        console.log(userId)
         if (userId) {
           let postdata =
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date></m:queryUserAttendanceList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
+            // url: '/api',
             // url: '/attence/webService/AttenceService?wsdl',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -79,11 +81,9 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            // if (!handleData) {
-              let result = handleData.rows
-              for (let i = 1; i < result.length; i++) {
-                this.handleAddTimesheet('AddworkhoureTimesheet')
-              // }
+            let result = handleData.rows
+            for (let i = 1; i < result.length; i++) {
+              this.handleAddTimesheet('AddworkhoureTimesheet')
               this.updateData = result
             }
           } else {
@@ -92,9 +92,7 @@ export default {
         } else {
           console.log(res.data)
         }
-      } catch (e) {
-        console.log(e)
-      }
+      } catch (e) {}
       // if (res.data.status === '0' && res.data) {
       //   let result = res.data.result
       //   for (let i = 1; i < result.length; i++) {
@@ -184,6 +182,38 @@ export default {
       }
       return verifyFalg
     },
+    verifyIsKoNormalTime () {
+      let verifyFalg = true
+      for (let i = 0; i < this.addTimesheetList.length; i++) {
+        if (Boolean(this.timesheetIsWorkday) && this.$refs.addTimesheet[i].timesheetObj.workstate_type !== '7' && this.$refs.addTimesheet[i].timesheetObj.normal_time.replace(/^[1-9]\d*$/g, '')) {
+          this.toast = true
+          this.message = '请填写正确工时！'
+          if (this.toastTimer) {
+            clearTimeout(this.toastTimer)
+          }
+          this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+          verifyFalg = false
+          return false
+        }
+      }
+      return verifyFalg
+    },
+    verifyIsKoOverworkTime () {
+      let verifyFalg = true
+      for (let i = 0; i < this.addTimesheetList.length; i++) {
+        if (this.$refs.addTimesheet[i].timesheetObj.workstate_type !== '7' && this.$refs.addTimesheet[i].timesheetObj.overwork_time.replace(/^[1-9]\d*$/g, '')) {
+          this.toast = true
+          this.message = '请填写正确加班工时！'
+          if (this.toastTimer) {
+            clearTimeout(this.toastTimer)
+          }
+          this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+          verifyFalg = false
+          return false
+        }
+      }
+      return verifyFalg
+    },
     // 节假日
     // 节假日只能填写加班工时
     verifyHolidayOvertime () {
@@ -234,49 +264,13 @@ export default {
       console.log(this.addTimesheetList.length)
       try {
         this.submitAllTimesheetList = []
-        if (this.verifyProjectWorkStatus() && this.verifyNormalAskleave() && this.verifyOvertime() && this.verifyHolidayOvertime() && this.verifyHolidayOvertimeExceed11()) {
+        if (this.verifyProjectWorkStatus() && this.verifyNormalAskleave() && this.verifyIsKoNormalTime() && this.verifyOvertime() && this.verifyIsKoOverworkTime() && this.verifyHolidayOvertime() && this.verifyHolidayOvertimeExceed11()) {
           for (let i = 0; i < this.addTimesheetList.length; i++) {
             this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
           }
           this.handlePOSTSubmit(this.submitAllTimesheetList)
           this.$router.push('/attendance')
         }
-        // /^[1-9]\d*$/.test(value);
-        // console.log(this.addTimesheetList.length)
-
-        // console.log(123)
-
-        //
-        // for (let i = 0; i < this.addTimesheetList.length; i++) {
-        //   // 非节假日
-        //
-        //   if (Boolean(this.timesheetIsWorkday) && this.$refs.addTimesheet[i].timesheetObj.workstate_type !== '7' && this.$refs.addTimesheet[i].timesheetObj.normal_time.replace(/^[1-9]\d*$/g, '')) {
-        //     this.toast = true
-        //     this.message = '请填写正确工时！'
-        //     if (this.toastTimer) {
-        //       clearTimeout(this.toastTimer)
-        //     }
-        //     this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
-        //     return false
-        //   }
-        //
-        //   // 节假日
-
-        //   // console.log(Boolean(!this.timesheetIsWorkday))
-
-        //   if (this.$refs.addTimesheet[i].timesheetObj.workstate_type !== '7' && this.$refs.addTimesheet[i].timesheetObj.overwork_time.replace(/^[1-9]\d*$/g, '')) {
-        //     this.toast = true
-        //     this.message = '请填写正确加班工时！'
-        //     if (this.toastTimer) {
-        //       clearTimeout(this.toastTimer)
-        //     }
-        //     this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
-        //     return false
-        //   }
-        //   this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
-        // }
-        // this.handlePOSTSubmit(this.submitAllTimesheetList)
-        // this.$router.push('/attendance')
       } catch (e) {
         console.log(e)
       }
@@ -292,8 +286,9 @@ export default {
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
+            // url: '/api',
             // url: '/attence/webService/AttenceService?wsdl',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },

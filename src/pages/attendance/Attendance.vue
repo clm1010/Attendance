@@ -110,8 +110,9 @@ export default {
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserCalendar xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><year_month type='String'>${yearMonth}</year_month></m:queryUserCalendar></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
+            // url: '/api',
             // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -161,7 +162,7 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            console.log(JSON.stringify(handleData.rows))
+            // console.log(JSON.stringify(handleData.rows))
             this.arr = this.handelDate(handleData.rows)
             // console.log(JSON.stringify(this.arr))
           } else {
