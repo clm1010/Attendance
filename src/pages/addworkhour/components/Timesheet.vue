@@ -28,7 +28,6 @@
     <div class="timesheet-panel">
       <i class="material-icons">card_travel</i>
       <div class="timesheet-content">
-        <!-- :defProject="defProject" -->
         <label class="lbl-title">项目名称</label>
         <select
           class="timesheet-select"
@@ -194,6 +193,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 export default {
   props: {
     'currentDate': String
@@ -278,9 +278,8 @@ export default {
           let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserProjectList xmlns:m='http://webservice.attence.com/'><empId type='String'>${userId}</empId></m:queryUserProjectList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            // url: '/api',
-            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
-            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            url: '/api',
+            // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetProjectType).catch(function (error) {
@@ -300,9 +299,8 @@ export default {
         let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryWorkState xmlns:m='http://webservice.attence.com/'></m:queryWorkState></soap:Body></soap:Envelope>`
         axios({
           method: 'POST',
-          // url: '/api',
-          // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
-          url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+          url: '/api',
+          // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
           headers: { 'content-type': 'application/text; charset=utf-8' },
           data: postdata
         }).then(this.handleGetWorkStatus).catch(function (error) {
@@ -329,13 +327,13 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let processData = (new Function('return' + sliceData))()
-            console.log(processData)
             this.projectObjList = processData.rows
-
-            // this.projectType = this.projectObjList[0].project_id
-            // this.timesheetObj.project_id = this.projectObjList[0].project_id
-            // this.timesheetObj.project_name = this.projectObjList[0].project_name
-            // this.timesheetObj.check_id = this.projectObjList[0].group_leader_id
+            if (this.timesheetTitle === '添加工时') {
+              this.projectType = this.projectObjList[0].project_id
+              this.timesheetObj.project_id = this.projectObjList[0].project_id
+              this.timesheetObj.project_name = this.projectObjList[0].project_name
+              this.timesheetObj.check_id = this.projectObjList[0].group_leader_id
+            }
           } else {
             console.log(sliceData)
           }
@@ -420,6 +418,9 @@ export default {
     this.timesheetObj.user_id = sessionStorage.getItem('user_id')
     this.timesheetObj.user_name = sessionStorage.getItem('user_name')
     console.log('被创建')
+  },
+  computed: {
+    ...mapState(['timesheetTitle', 'timesheetDate', 'timesheetIsWorkday'])
   }
 }
 </script>

@@ -16,6 +16,7 @@ import 'muse-ui/dist/theme-light.min.css'
 import 'swiper/dist/css/swiper.min.css'
 import './assets/styles/material-icons.css'
 import 'vue-easytable/libs/themes-base/index.css'
+import common from './common/common'
 
 Vue.config.productionTip = false
 fastclick.attach(document.body)
@@ -23,6 +24,7 @@ Vue.use(MuseUI)
 Vue.use(VueAwesomeSwiper)
 Vue.use(VTable)
 Vue.use(VPagination)
+Vue.prototype.$common = common
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

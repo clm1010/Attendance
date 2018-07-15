@@ -2,7 +2,6 @@
   "status": "0",
   "msg": "",
   "result": [
-    {"user_id":"1","user_name":"李正阳","project_id":"JXHSPABXG17P001","project_name":"2017年平安财产保险股份有限公司技术服务协议","techplatform_type":"2","workstate_type":"7","date":"2018-7-24","normal_time":"","overwork_time":"","job_content":"","askleave_type":"4","askleave_time":"5","askleave_reason":"请假内容","check_status":"1","check_id":"111"}
-    ,{"user_id":"1","user_name":"李正阳","project_id":"VCCNZZZZZ16P042","project_name":"2016年平安金科人力采购项目SZ-F","techplatform_type":"1","workstate_type":"5","date":"2018-7-24","normal_time":"4","overwork_time":"3","job_content":"123","askleave_type":"","askleave_time":"","askleave_reason":"","check_status":"1","check_id":"2"}
+    {"user_id":"1","user_name":"李正阳","project_id":"VCCNGZRCB16P005","project_name":"SS_广州农商公积金对账簿系统升级项目","techplatform_type":"2","workstate_type":"7","date":"2018-7-24","normal_time":"","overwork_time":"","job_content":"","askleave_type":"4","askleave_time":"4","askleave_reason":"请假内容","check_status":"1","check_id":"38"},{"user_id":"1","user_name":"李正阳","project_id":"JXHSFJHXB16P004","project_name":"WB_福建海峡银行互联网金融平台(直销银行）项目","techplatform_type":"1","workstate_type":"5","date":"2018-7-24","normal_time":"4","overwork_time":"3","job_content":"123","askleave_type":"","askleave_time":"","askleave_reason":"","check_status":"3","check_id":"38"}
   ]
 }

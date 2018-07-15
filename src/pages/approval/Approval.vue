@@ -140,12 +140,6 @@ export default {
     }
   },
   methods: {
-    isEmptyObject (obj) {
-      for (var key in obj) {
-        return false
-      }
-      return true
-    },
     // 处理监听日期框
     handleMonthChange (value) {
       this.monthValue = value
@@ -184,9 +178,8 @@ export default {
           let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAllAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month><name type='String'>${this.searchName}</name></m:queryAllAttendanceList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            // url: '/api',
-            // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
-            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            url: '/api',
+            // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetApprovalTableData).catch(function (error) {
@@ -201,12 +194,13 @@ export default {
       // axios.get('../../attendance/mock/approvaltablelist.json').then(this.handleGetApprovalTableData)
     },
     handleGetApprovalTableData (res) {
+      console.log(res)
       try {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            if (!this.isEmptyObject(handleData)) {
+            if (!this.$common.isEmptyObject(handleData)) {
               let tableDataList = handleData.rows
               console.log(tableDataList)
               this.total = tableDataList.length

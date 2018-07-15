@@ -39,7 +39,6 @@ export default {
   data () {
     return {
       toast: false,
-      // title: '',
       message: '',
       currentDate: '',
       addTimesheetList: [],
@@ -51,15 +50,13 @@ export default {
     getAjaxUpdateTimesheet () {
       try {
         let userId = sessionStorage.getItem('user_id')
-        console.log(userId)
         if (userId) {
           let postdata =
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date></m:queryUserAttendanceList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            // url: '/api',
-            // url: '/attence/webService/AttenceService?wsdl',
-            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            url: '/api',
+            // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -85,6 +82,9 @@ export default {
             for (let i = 1; i < result.length; i++) {
               this.handleAddTimesheet('AddworkhoureTimesheet')
               this.updateData = result
+              this.$nextTick(function () {
+                this.updateForm()
+              })
             }
           } else {
             console.log(sliceData)
@@ -95,10 +95,14 @@ export default {
       } catch (e) {}
       // if (res.data.status === '0' && res.data) {
       //   let result = res.data.result
-      //   for (let i = 1; i < result.length; i++) {
+      //   for (let i = 0; i < result.length; i++) {
       //     this.handleAddTimesheet('AddworkhoureTimesheet')
       //   }
       //   this.updateData = result
+      //   this.$nextTick(function () {
+      //     this.updateForm()
+      //   })
+      //
       // }
     },
     handleAddTimesheet (addworkhoureTimesheet) {
@@ -124,7 +128,7 @@ export default {
           let hashTempworkstate = {}
           for (let i in temporary) {
             if (temporary[i] !== '') {
-              if (hashTemporary[temporary[i]] && hashTempworkstate[tempworkstate[i]]) {
+              if (hashTemporary[temporary[i]] || hashTempworkstate[tempworkstate[i]]) {
                 verifyFalg = false
                 this.toast = true
                 this.message = '同一个项目、同一个工作状态不能重复！'
@@ -149,7 +153,6 @@ export default {
       for (let i = 0; i < this.addTimesheetList.length; i++) {
         allNormalAskleaveTime += Number(this.$refs.addTimesheet[i].timesheetObj.normal_time) + Number(this.$refs.addTimesheet[i].timesheetObj.askleave_time)
       }
-      console.log(allNormalAskleaveTime)
       if (Boolean(this.timesheetIsWorkday) && allNormalAskleaveTime !== 8) {
         this.toast = true
         this.message = '正常工时和请假工时合计不得超过8小时！'
@@ -251,11 +254,32 @@ export default {
       }
       return verifyFalg
     },
+    verifyIsEmpty () {
+      let verifyFalg = true
+      let isProject = false
+      let msg = ''
+      for (var i = 0; i < this.addTimesheetList.length; i++) {
+        if (this.$refs.addTimesheet[i].timesheetObj.project_id === '') {
+          msg = '请选择项目名称！'
+          isProject = true
+        }
+      }
+      if (isProject) {
+        this.toast = true
+        this.message = msg
+        if (this.toastTimer) {
+          clearTimeout(this.toastTimer)
+        }
+        this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+        verifyFalg = false
+        return false
+      }
+      return verifyFalg
+    },
     // 监听删除当前工时表单事件
     handleDeleteTimesheet (thisForm) {
       if (this.addTimesheetList.length > 1) {
         this.addTimesheetList.splice(thisForm, 1)
-        console.log(this.addTimesheetList.length)
       }
     },
     // 提交全部工时表单
@@ -264,12 +288,11 @@ export default {
       console.log(this.addTimesheetList.length)
       try {
         this.submitAllTimesheetList = []
-        if (this.verifyProjectWorkStatus() && this.verifyNormalAskleave() && this.verifyIsKoNormalTime() && this.verifyOvertime() && this.verifyIsKoOverworkTime() && this.verifyHolidayOvertime() && this.verifyHolidayOvertimeExceed11()) {
+        if (this.verifyProjectWorkStatus() && this.verifyNormalAskleave() && this.verifyIsKoNormalTime() && this.verifyOvertime() && this.verifyIsKoOverworkTime() && this.verifyHolidayOvertime() && this.verifyHolidayOvertimeExceed11() && this.verifyIsEmpty()) {
           for (let i = 0; i < this.addTimesheetList.length; i++) {
             this.submitAllTimesheetList.push(this.$refs.addTimesheet[i].timesheetObj)
           }
           this.handlePOSTSubmit(this.submitAllTimesheetList)
-          this.$router.push('/attendance')
         }
       } catch (e) {
         console.log(e)
@@ -277,79 +300,86 @@ export default {
     },
     handlePOSTSubmit (data) {
       console.log(JSON.stringify(data))
-      try {
-        let userId = sessionStorage.getItem('user_id')
-        if (userId && data != null) {
-          console.log(JSON.stringify(data))
-          let dataStr = JSON.stringify(data)
-          let postdata =
-            `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
-          axios({
-            method: 'POST',
-            // url: '/api',
-            // url: '/attence/webService/AttenceService?wsdl',
-            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
-            headers: {
-              'content-type': 'application/text; charset=utf-8'
-            },
-            data: postdata
-          }).then(this.handleGetPOSTSubmit).catch(function (error) {
-            console.log(error)
-          })
-        } else {
-          console.log('userId: ' + userId)
-        }
-      } catch (e) {
-        console.log(e)
-      }
+      // try {
+      //   let userId = sessionStorage.getItem('user_id')
+      //   if (userId && data != null) {
+      //     console.log(JSON.stringify(data))
+      //     let dataStr = JSON.stringify(data)
+      //     let postdata =
+      //       `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
+      //     axios({
+      //       method: 'POST',
+      //       url: '/api',
+      //       // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+      //       headers: {
+      //         'content-type': 'application/text; charset=utf-8'
+      //       },
+      //       data: postdata
+      //     }).then(this.handleGetPOSTSubmitInfo).catch(function (error) {
+      //       console.log(error)
+      //     })
+      //   } else {
+      //     console.log('userId: ' + userId)
+      //   }
+      // } catch (e) {
+      //   console.log(e)
+      // }
+      // this.$router.push('/attendance')
     },
-    handleGetPOSTSubmit (res) {
+    handleGetPOSTSubmitInfo (res) {
       console.log(res)
     },
     hideToast () {
       this.toast = false
       if (this.toastTimer) clearTimeout(this.toastTimer)
+    },
+    updateForm () {
+      console.log('更新')
+      if (this.updateData.length !== 0) {
+        try {
+          // console.log(JSON.stringify(this.updateData))
+          for (let i = 0; i < this.addTimesheetList.length; i++) {
+            this.$refs.addTimesheet[i].defTPT(this.updateData[i].techplatform_type)
+            this.$refs.addTimesheet[i].defProject(this.updateData[i].project_id, this.updateData[i].project_name, this.updateData[i].check_id)
+            this.$refs.addTimesheet[i].defWorkStatus(this.updateData[i].workstate_type, this.updateData[i].askleave_type, this.updateData[i].askleave_time, this.updateData[i].askleave_reason, this.updateData[i].normal_time, this.updateData[i].overwork_time, this.updateData[i].job_content)
+            this.$refs.addTimesheet[i].defCheckStatus(this.updateData[i].check_status)
+          }
+          for (let j = 0; j < this.addTimesheetList.length; j++) {
+            // this.$refs.addTimesheet[j].$el.className += ' updateForm'
+            this.$refs.addTimesheet[j].$el[0].style.display = 'none'
+            console.log(this.updateData[j].check_status)
+            if (this.updateData[j].check_status === '1' || this.updateData[j].check_status === '2') {
+              this.$refs.addTimesheet[j].$el[1].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[2].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[3].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[4].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[5].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[6].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[7].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[8].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[9].disabled = 'disabled'
+              this.$refs.addTimesheet[j].$el[10].disabled = 'disabled'
+            }
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      }
     }
   },
   mounted () {
     this.addTimesheetList = []
     this.currentDate = this.timesheetDate
+    if (this.timesheetTitle === '添加工时') {
+      this.handleAddTimesheet('AddworkhoureTimesheet')
+      console.log(1)
+    }
+    if (this.timesheetTitle === '修改工时') {
+      this.getAjaxUpdateTimesheet()
+    }
     // this.title = this.$route.params.title
     // this.title =
     // this.currentDate = this.currentDate.replace(/\//g, '-')
-    this.handleAddTimesheet('AddworkhoureTimesheet')
-    this.getAjaxUpdateTimesheet()
-  },
-  updated () {
-    if (this.updateData.length !== 0) {
-      try {
-        console.log(JSON.stringify(this.updateData))
-        for (let i = 0; i < this.addTimesheetList.length; i++) {
-          this.$refs.addTimesheet[i].defTPT(this.updateData[i].techplatform_type)
-          this.$refs.addTimesheet[i].defProject(this.updateData[i].project_id, this.updateData[i].project_name, this.updateData[i].check_id)
-          this.$refs.addTimesheet[i].defWorkStatus(this.updateData[i].workstate_type, this.updateData[i].askleave_type, this.updateData[i].askleave_time, this.updateData[i].askleave_reason, this.updateData[i].normal_time, this.updateData[i].overwork_time, this.updateData[i].job_content)
-          this.$refs.addTimesheet[i].defCheckStatus(this.updateData[i].check_status)
-          // console.log(this.$refs.addTimesheet[i].$el)
-        }
-        for (let j = 0; j < this.addTimesheetList.length; j++) {
-          // console.log(this.$refs.addTimesheet[j].$el[0])
-          this.$refs.addTimesheet[j].$el[0].style.display = 'none'
-          console.log(this.updateData[j].check_status)
-          if (this.updateData[j].check_status === '1' || this.updateData[j].check_status === '2') {
-            this.$refs.addTimesheet[j].$el[1].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[2].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[3].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[4].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[5].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[6].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[7].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[8].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[9].disabled = 'disabled'
-            this.$refs.addTimesheet[j].$el[10].disabled = 'disabled'
-          }
-        }
-      } catch (e) {}
-    }
   },
   computed: {
     ...mapState(['timesheetTitle', 'timesheetDate', 'timesheetIsWorkday'])
