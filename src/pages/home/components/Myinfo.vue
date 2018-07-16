@@ -31,8 +31,8 @@ export default {
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
-            // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            // url: '/api',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },

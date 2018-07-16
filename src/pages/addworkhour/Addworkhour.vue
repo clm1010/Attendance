@@ -55,8 +55,8 @@ export default {
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserAttendanceList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date></m:queryUserAttendanceList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
-            // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            // url: '/api',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -73,15 +73,18 @@ export default {
       // axios.get('../../attendance/mock/timesheet.json').then(this.handleGetUpdateTimesheet)
     },
     handleGetUpdateTimesheet (res) {
+      console.log(res)
       try {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
             let result = handleData.rows
-            for (let i = 1; i < result.length; i++) {
+            for (let i = 0; i < result.length; i++) {
+              console.log(result)
               this.handleAddTimesheet('AddworkhoureTimesheet')
               this.updateData = result
+              console.log(this.updateData)
               this.$nextTick(function () {
                 this.updateForm()
               })
@@ -300,31 +303,31 @@ export default {
     },
     handlePOSTSubmit (data) {
       console.log(JSON.stringify(data))
-      // try {
-      //   let userId = sessionStorage.getItem('user_id')
-      //   if (userId && data != null) {
-      //     console.log(JSON.stringify(data))
-      //     let dataStr = JSON.stringify(data)
-      //     let postdata =
-      //       `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
-      //     axios({
-      //       method: 'POST',
-      //       url: '/api',
-      //       // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
-      //       headers: {
-      //         'content-type': 'application/text; charset=utf-8'
-      //       },
-      //       data: postdata
-      //     }).then(this.handleGetPOSTSubmitInfo).catch(function (error) {
-      //       console.log(error)
-      //     })
-      //   } else {
-      //     console.log('userId: ' + userId)
-      //   }
-      // } catch (e) {
-      //   console.log(e)
-      // }
-      // this.$router.push('/attendance')
+      try {
+        let userId = sessionStorage.getItem('user_id')
+        if (userId && data != null) {
+          console.log(JSON.stringify(data))
+          let dataStr = JSON.stringify(data)
+          let postdata =
+            `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
+          axios({
+            method: 'POST',
+            // url: '/api',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            headers: {
+              'content-type': 'application/text; charset=utf-8'
+            },
+            data: postdata
+          }).then(this.handleGetPOSTSubmitInfo).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          console.log('userId: ' + userId)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+      this.$router.push('/attendance')
     },
     handleGetPOSTSubmitInfo (res) {
       console.log(res)

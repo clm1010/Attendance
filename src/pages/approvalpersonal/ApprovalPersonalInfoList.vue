@@ -225,8 +225,9 @@ export default {
         let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:updateAttendByIds xmlns:m='http://webservice.attence.com/'><ids type='String'>${id}</ids><status>${pas}</status></m:updateAttendByIds></soap:Body></soap:Envelope>`
         axios({
           method: 'POST',
-          url: '/api',
+          // url: '/api',
           // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+          url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
           headers: { 'content-type': 'application/text; charset=utf-8' },
           data: postdata
         }).then(this.handleApprovalPassedRes).catch(function (error) {

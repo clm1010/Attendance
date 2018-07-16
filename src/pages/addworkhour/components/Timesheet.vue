@@ -229,7 +229,21 @@ export default {
   methods: {
     // 获取技术平台
     getTechnologyPlatform () {
-      axios.get('../../attendance/mock/technologyplatformtype.json').then(this.handleGetTechnologyPlatformType)
+      // axios.get('../../attendance/mock/technologyplatformtype.json').then(this.handleGetTechnologyPlatformType)
+      try {
+        let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryDicList xmlns:m='http://webservice.attence.com/'><type_id type='String'>jishupingtai</type_id></m:queryDicList></soap:Body></soap:Envelope>`
+        axios({
+          method: 'POST',
+          // url: '/api',
+          url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+          headers: { 'content-type': 'application/text; charset=utf-8' },
+          data: postdata
+        }).then(this.handleGetTechnologyPlatformType).catch(function (error) {
+          console.log(error)
+        })
+      } catch (e) {
+        console.log(e)
+      }
     },
     // 自定义处理技术平台
     defTPT (e) {
@@ -278,8 +292,8 @@ export default {
           let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserProjectList xmlns:m='http://webservice.attence.com/'><empId type='String'>${userId}</empId></m:queryUserProjectList></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            url: '/api',
-            // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            // url: '/api',
+            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
             headers: { 'content-type': 'application/text; charset=utf-8' },
             data: postdata
           }).then(this.handleGetProjectType).catch(function (error) {
@@ -296,11 +310,11 @@ export default {
     // 工作状态
     getWorkStatus () {
       try {
-        let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryWorkState xmlns:m='http://webservice.attence.com/'></m:queryWorkState></soap:Body></soap:Envelope>`
+        let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryDicList xmlns:m='http://webservice.attence.com/'><type_id type='String'>workstate</type_id></m:queryDicList></soap:Body></soap:Envelope>`
         axios({
           method: 'POST',
-          url: '/api',
-          // url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+          // url: '/api',
+          url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
           headers: { 'content-type': 'application/text; charset=utf-8' },
           data: postdata
         }).then(this.handleGetWorkStatus).catch(function (error) {
@@ -310,15 +324,45 @@ export default {
         console.log(e)
       }
     },
+    // 获取请假类型
     getLeaveType () {
-      axios.get('../../attendance/mock/leavetype.json').then(this.handleGetLeaveType)
+      // axios.get('../../attendance/mock/leavetype.json').then(this.handleGetLeaveType)
+      try {
+        let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryDicList xmlns:m='http://webservice.attence.com/'><type_id type='String'>qingjialeixing</type_id></m:queryDicList></soap:Body></soap:Envelope>`
+        axios({
+          method: 'POST',
+          // url: '/api',
+          url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+          headers: { 'content-type': 'application/text; charset=utf-8' },
+          data: postdata
+        }).then(this.handleGetLeaveType).catch(function (error) {
+          console.log(error)
+        })
+      } catch (e) {
+        console.log(e)
+      }
     },
     // 处理技术平台类型
     handleGetTechnologyPlatformType (res) {
-      if (res.data.status === '0' && res.data) {
-        this.technologyPlatformList = res.data.result
-        // this.timesheetObj.techplatform_type = '1'
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let processData = (new Function('return' + sliceData))()
+            this.technologyPlatformList = processData.rows
+          } else {
+            console.log(sliceData)
+          }
+        } else {
+          console.log(res.data)
+        }
+      } catch (e) {
+        console.log(e)
       }
+      // if (res.data.status === '0' && res.data) {
+      //   this.technologyPlatformList = res.data.result
+      //   // this.timesheetObj.techplatform_type = '1'
+      // }
     },
     // 处理项目名称
     handleGetProjectType (res) {
@@ -366,10 +410,25 @@ export default {
     },
     // 请假类型
     handleGetLeaveType (res) {
-      if (res.data.status === '0' && res.data) {
-        this.leaveTypeList = res.data.result
-        // this.timesheetObj.askleave_type = '1'
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let processData = (new Function('return' + sliceData))()
+            this.leaveTypeList = processData.rows
+          } else {
+            console.log(sliceData)
+          }
+        } else {
+          console.log(res.data)
+        }
+      } catch (e) {
+        console.log(e)
       }
+      // if (res.data.status === '0' && res.data) {
+      //   this.leaveTypeList = res.data.result
+      //   // this.timesheetObj.askleave_type = '1'
+      // }
     },
     // 监听技术平台类型input事件
     handleTechnologyPlatformTypeInput () {
