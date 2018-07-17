@@ -325,10 +325,11 @@ export default {
       } catch (e) {
         console.log(e)
       }
-      this.$router.push('/attendance')
+      // this.$router.push('/attendance')
     },
     handleGetPOSTSubmitInfo (res) {
       console.log(res)
+      this.$router.push('/attendance')
     },
     hideToast () {
       this.toast = false

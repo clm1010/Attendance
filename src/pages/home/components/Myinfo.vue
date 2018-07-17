@@ -32,8 +32,8 @@ export default {
               `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:getUserNumForWX xmlns:m='http://webservice.attence.com/'><code type='String'>${code}</code></m:getUserNumForWX></soap:Body></soap:Envelope>`
             axios({
               method: 'POST',
-              url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
-              // url: this.baseUrl,
+              // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+              url: this.baseUrl,
               headers: {
                 'content-type': 'application/text; charset=utf-8'
               },
@@ -59,13 +59,22 @@ export default {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
-            let handleData = (new Function('return' + sliceData))()
-            this.getQueryUserInfoFor()
-            // if (handleData.errcode === 40029) {
-            //   this.$router.push('/errormsg')
-            // } else {
-            //   this.getQueryUserInfoFor()
-            // }
+            // let handleData = (new Function('return' + sliceData))()
+            let handleData = {
+              'errcode': 0,
+              'errmsg': 'ok',
+              'UserId':'P0121142',
+              'DeviceId':'DEVICEID',
+              'user_ticket': 'USER_TICKET',
+              'expires_in':7200
+            }
+            // this.getQueryUserInfoFor()
+            console.log(handleData)
+            if (handleData.UserId === '') {
+              this.$router.push('/errormsg')
+            } else {
+              this.getQueryUserInfoFor(handleData)
+            }
           } else {
             console.log(sliceData)
           }
@@ -77,9 +86,10 @@ export default {
       }
     },
     // 获取员工信息
-    getQueryUserInfoFor () {
+    getQueryUserInfoFor (resData) {
+      console.log(resData)
       try {
-        let pid = 'P0121142'
+        let pid = resData.UserId
         if (pid) {
           sessionStorage.setItem('pid', pid)
           let postdata =
@@ -108,6 +118,7 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
+            console.log(JSON.stringify(handleData))
             this.userId = handleData.user_id
             this.userName = handleData.user_name
             this.userNum = handleData.user_num
