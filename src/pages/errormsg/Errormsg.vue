@@ -26,7 +26,7 @@ export default {
   .mu-card-header
     padding:.2rem 0;
     .mu-icon
-      color:rgb(244, 67, 54);
+      color:#f44336;
       font-size: 2rem;
       width: 2rem;
       height: 2rem;

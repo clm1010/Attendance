@@ -107,10 +107,19 @@
             disabled
           />
           <template v-if="this.personalDetailsObj.checkStatus === '1'">
-            <mu-flat-button label="待审批工时" class="demo-flat-button" icon="android" primary/>
-            <mu-flat-button label="已批准工时" class="demo-flat-button" labelPosition="before" icon="folder" secondary/>
-            <mu-flat-button label="待审批工时" class="demo-flat-button" labelPosition="before" icon="folder" secondary/>
-            <mu-flat-button icon="android" class="demo-flat-button" backgroundColor="#a4c639" color="#FFF"/>
+            <div class="checkstatus-panel">
+              <mu-flat-button label="待审批工时" class="demo-flat-button" icon="mail" color='#3f3fff'/>
+            </div>
+          </template>
+          <template v-if="this.personalDetailsObj.checkStatus === '2'">
+            <div class="checkstatus-panel">
+              <mu-flat-button label="已批准工时" class="demo-flat-button" icon="check" color='#51db51'/>
+            </div>
+          </template>
+          <template v-if="this.personalDetailsObj.checkStatus === '3'">
+            <div class="checkstatus-panel">
+              <mu-flat-button label="被拒绝工时" class="demo-flat-button" icon="close" color='#ff0400'/>
+            </div>
           </template>
           <mu-card-actions class="personal-details-footer" v-show='isShow'>
             <mu-raised-button  type="button" label="通过" @click="handleSubmitApprovalPD('2')" class="demo-raised-button" primary/>
@@ -211,4 +220,6 @@ export default {
     margin:.2rem;
     .personal-details-footer
       text-align: center;
+  .checkstatus-panel
+    text-align: center;
 </style>

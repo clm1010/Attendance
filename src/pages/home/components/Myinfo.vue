@@ -25,7 +25,7 @@ export default {
     getWeChatCodeVerify () {
       try {
         let code = this.$common.getQueryString('code')
-        console.log(typeof code)
+        // console.log(code)
         if ((code !== '') && (code != null) && (code !== undefined)) {
           if (code) {
             let postdata =
