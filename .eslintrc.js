@@ -23,6 +23,7 @@ module.exports = {
   rules: {
     "no-new-func": 0,//禁止使用new Function
     "no-eval": 0,
+    "no-useless-escape":0,
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development

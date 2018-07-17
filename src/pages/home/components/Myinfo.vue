@@ -21,6 +21,61 @@ export default {
     }
   },
   methods: {
+    // 获取微信Code验证
+    getWeChatCodeVerify () {
+      try {
+        let code = this.$common.getQueryString('code')
+        console.log(typeof code)
+        if ((code !== '') && (code != null) && (code !== undefined)) {
+          if (code) {
+            let postdata =
+              `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:getUserNumForWX xmlns:m='http://webservice.attence.com/'><code type='String'>${code}</code></m:getUserNumForWX></soap:Body></soap:Envelope>`
+            axios({
+              method: 'POST',
+              url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+              // url: this.baseUrl,
+              headers: {
+                'content-type': 'application/text; charset=utf-8'
+              },
+              data: postdata
+            }).then(this.handleGetWeChatCodeVerifyRes).catch(function (error) {
+              console.log(error)
+            })
+          } else {
+            console.log('code:' + code)
+          }
+        } else {
+          console.log('code:' + code)
+          this.$router.push('/errormsg')
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    // 处理响应的验证结果
+    handleGetWeChatCodeVerifyRes (res) {
+      console.log(res)
+      try {
+        if (res.data.indexOf('<String>') !== -1) {
+          let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
+          if (sliceData) {
+            let handleData = (new Function('return' + sliceData))()
+            this.getQueryUserInfoFor()
+            // if (handleData.errcode === 40029) {
+            //   this.$router.push('/errormsg')
+            // } else {
+            //   this.getQueryUserInfoFor()
+            // }
+          } else {
+            console.log(sliceData)
+          }
+        } else {
+          console.log(res.data)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
     // 获取员工信息
     getQueryUserInfoFor () {
       try {
@@ -31,8 +86,7 @@ export default {
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            // url: '/api',
-            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            url: this.baseUrl,
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -72,9 +126,13 @@ export default {
       }
     }
   },
-  mounted () {
-    this.getQueryUserInfoFor()
+  created () {
+    this.getWeChatCodeVerify()
   }
+  // mounted () {
+  //   this.getWeChatCodeVerify()
+  //   // this.getQueryUserInfoFor()
+  // }
 }
 </script>
 

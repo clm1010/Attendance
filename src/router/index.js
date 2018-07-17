@@ -8,6 +8,7 @@ import ApprovalPersonalInfoList from '@/pages/approvalpersonal/ApprovalPersonalI
 import ApprovalPersonalDetails from '@/pages/approvalpersonaldetails/ApprovalPersonalDetails'
 import Problems from '@/pages/problems/Problems'
 import Remind from '@/pages/remind/Remind'
+import Errormsg from '@/pages/errormsg/Errormsg'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
       path: '/addworkhour',
       name: 'Addworkhour',
       component: Addworkhour
+    },
+    {
+      path: '/errormsg',
+      name: 'Errormsg',
+      component: Errormsg
     }
   ]
 })

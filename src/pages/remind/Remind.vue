@@ -47,8 +47,8 @@ export default {
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryUserInfoForWx xmlns:m='http://webservice.attence.com/'><empId type='String'>${pid}</empId></m:queryUserInfoForWx></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            // url: '/api',
-            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+            // url: this.baseUrl,
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
@@ -91,13 +91,13 @@ export default {
         let userId = sessionStorage.getItem('user_id')
         let userName = sessionStorage.getItem('user_name')
         if (userId && userName && this.remind) {
-          // console.log(this.remind)
+          console.log(this.remind)
           let postdata =
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:updateRemindType xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><user_name type='String'>${userName}</user_name><push_type>${this.remind}</push_type></m:updateRemindType></soap:Body></soap:Envelope>`
           axios({
             method: 'POST',
-            // url: '/api',
-            url: 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl',
+            url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
+            // url: this.baseUrl,
             headers: {
               'content-type': 'application/text; charset=utf-8'
             },
