@@ -16,5 +16,17 @@ export default {
     try {
       localStorage.timesheetIsWorkday = timesheetIsWorkday
     } catch (e) {}
+  },
+  changeApprovalMonth (state, approvalMonth) {
+    state.approvalMonth = approvalMonth
+    try {
+      localStorage.approvalMonth = approvalMonth
+    } catch (e) {}
+  },
+  changeApprovalUserId (state, approvalUserId) {
+    state.approvalUserId = approvalUserId
+    try {
+      localStorage.approvalUserId = approvalUserId
+    } catch (e) {}
   }
 }

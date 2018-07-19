@@ -1,6 +1,6 @@
 <template>
   <mu-appbar title="审批个人详细信息">
-    <mu-icon-button icon="chevron_left" slot="left" @click="handleGoBack"/>
+    <mu-icon-button icon="chevron_left" slot="left" to="/approvalpersonalinfolist" />
     <mu-icon-button slot="right"></mu-icon-button>
   </mu-appbar>
 </template>
@@ -10,12 +10,13 @@ export default {
   name: 'ApprovalPersonalDetailsHeader',
   data () {
     return {}
-  },
-  methods: {
-    handleGoBack () {
-      this.$router.go(-1)
-    }
   }
+  // ,
+  // methods: {
+  //   handleGoBack () {
+  //     this.$router.go(-1)
+  //   }
+  // }
 }
 </script>
 

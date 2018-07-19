@@ -117,34 +117,45 @@ export default {
       let verifyFalg = true
       if (this.addTimesheetList.length > 1) {
         let temporary = []
-        let tempworkstate = []
+        // let tempworkstate = []
         for (let i = 0; i < this.addTimesheetList.length; i++) {
-          temporary.push(this.$refs.addTimesheet[i].timesheetObj.project_id)
-          tempworkstate.push(this.$refs.addTimesheet[i].timesheetObj.workstate_type)
+          temporary.push(this.$refs.addTimesheet[i].timesheetObj.project_id + ',' + this.$refs.addTimesheet[i].timesheetObj.workstate_type)
+          // tempworkstate.push(this.$refs.addTimesheet[i].timesheetObj.workstate_type)
         }
-        // if((new Set(temporary)).size != temporary.length){
-        //     alert("数组有重复值")
-        // }
-        if (temporary.length !== 0) {
-          let hashTemporary = {}
-          let hashTempworkstate = {}
-          for (let i in temporary) {
-            if (temporary[i] !== '') {
-              if (hashTemporary[temporary[i]] || hashTempworkstate[tempworkstate[i]]) {
-                verifyFalg = false
-                this.toast = true
-                this.message = '同一个项目、同一个工作状态不能重复！'
-                if (this.toastTimer) {
-                  clearTimeout(this.toastTimer)
-                }
-                this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
-                return false
-              }
-            }
-            hashTemporary[temporary[i]] = true
-            hashTempworkstate[tempworkstate[i]] = true
+        // console.log(temporary)
+        if ((new Set(temporary)).size != temporary.length){
+          // alert("数组有重复值")
+          verifyFalg = false
+          this.toast = true
+          this.message = '同一个项目、同一个工作状态不能重复！'
+          if (this.toastTimer) {
+            clearTimeout(this.toastTimer)
           }
+          this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+          return false
         }
+        // if (temporary.length !== 0) {
+        //   let hashTemporary = {}
+        //   let hashTempworkstate = {}
+        //   for (let i in temporary) {
+        //     if (temporary[i] !== '') {
+        //       console.log(temporary[i])
+        //       console.log(tempworkstate[i])
+        //       if (hashTemporary[temporary[i]] || hashTempworkstate[tempworkstate[i]]) {
+        //         verifyFalg = false
+        //         this.toast = true
+        //         this.message = '同一个项目、同一个工作状态不能重复！'
+        //         if (this.toastTimer) {
+        //           clearTimeout(this.toastTimer)
+        //         }
+        //         this.toastTimer = setTimeout(() => { this.toast = false }, 4000)
+        //         return false
+        //       }
+        //     }
+        //     hashTemporary[temporary[i]] = true
+        //     hashTempworkstate[tempworkstate[i]] = true
+        //   }
+        // }
       }
       return verifyFalg
     },

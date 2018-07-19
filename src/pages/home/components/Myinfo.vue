@@ -24,12 +24,13 @@ export default {
     // 获取微信Code验证
     getWeChatCodeVerify () {
       try {
-        let code = this.$common.getQueryString('code')
-        // console.log(code)
-        if ((code !== '') && (code != null) && (code !== undefined)) {
+        let userNum = sessionStorage.getItem('user_num')
+        // window.alert(userNum)
+        if (userNum == null) {
+          let code = this.$common.getQueryString('code')
           if (code) {
-            let postdata =
-              `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:getUserNumForWX xmlns:m='http://webservice.attence.com/'><code type='String'>${code}</code></m:getUserNumForWX></soap:Body></soap:Envelope>`
+            // window.alert(this.baseUrl)
+            let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:getUserNumForWX xmlns:m='http://webservice.attence.com/'><code type='String'>${code}</code></m:getUserNumForWX></soap:Body></soap:Envelope>`
             axios({
               method: 'POST',
               // url: 'http://localhost:82/attence/webService/AttenceService?wsdl',
@@ -43,33 +44,39 @@ export default {
             })
           } else {
             console.log('code:' + code)
+            this.$router.push('/errormsg')
           }
         } else {
-          console.log('code:' + code)
-          this.$router.push('/errormsg')
+          // window.alert('存在user_num:' + userNum)
+          this.userId = sessionStorage.getItem('user_id')
+          this.userName = sessionStorage.getItem('user_name')
+          this.userNum = sessionStorage.getItem('user_num')
+          this.userProject = sessionStorage.getItem('user_project')
+          this.userProject = this.userProject == 'null' ? '' : this.userProject
         }
       } catch (e) {
+        // window.alert(e)
         console.log(e)
       }
     },
     // 处理响应的验证结果
     handleGetWeChatCodeVerifyRes (res) {
-      console.log(res)
+      // window.alert(JSON.stringify(res.data))
       try {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
-            // let handleData = (new Function('return' + sliceData))()
-            let handleData = {
-              'errcode': 0,
-              'errmsg': 'ok',
-              'UserId':'P0121142',
-              'DeviceId':'DEVICEID',
-              'user_ticket': 'USER_TICKET',
-              'expires_in':7200
-            }
+            let handleData = (new Function('return' + sliceData))()
+            // let handleData = {
+            //   'errcode': 0,
+            //   'errmsg': 'ok',
+            //   'UserId': 'P9026557',
+            //   'DeviceId': 'DEVICEID',
+            //   'user_ticket': 'USER_TICKET',
+            //   'expires_in': 7200
+            // }
             // this.getQueryUserInfoFor()
-            console.log(handleData)
+            // window.alert(JSON.stringify(handleData))
             if (handleData.UserId === '') {
               this.$router.push('/errormsg')
             } else {
@@ -87,7 +94,7 @@ export default {
     },
     // 获取员工信息
     getQueryUserInfoFor (resData) {
-      console.log(resData)
+      // console.log(resData)
       try {
         let pid = resData.UserId
         if (pid) {
@@ -118,14 +125,17 @@ export default {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            console.log(JSON.stringify(handleData))
+            // console.log(handleData.user_project)
             this.userId = handleData.user_id
             this.userName = handleData.user_name
             this.userNum = handleData.user_num
-            this.userProject = handleData.user_project === 'null' ? '' : handleData.user_project
+            this.userProject = handleData.user_project == 'null' ? '' : handleData.user_project
             sessionStorage.setItem('user_id', handleData.user_id)
             sessionStorage.setItem('user_name', handleData.user_name)
             sessionStorage.setItem('user_num', handleData.user_num)
+            sessionStorage.setItem('user_project', handleData.user_project)
+            // console.log(this.userProject)
+            // console.log(sessionStorage.getItem('user_project'))
           } else {
             console.log(sliceData)
           }
@@ -137,13 +147,15 @@ export default {
       }
     }
   },
-  created () {
-    this.getWeChatCodeVerify()
-  }
-  // mounted () {
+  // created () {
   //   this.getWeChatCodeVerify()
-  //   // this.getQueryUserInfoFor()
-  // }
+  // },
+  mounted () {
+    this.getWeChatCodeVerify()
+    // this.getQueryUserInfoFor()
+    // let project = sessionStorage.getItem('user_project')
+    // window.alert(project)
+  }
 }
 </script>
 

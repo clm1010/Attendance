@@ -30,7 +30,7 @@ export default new Router({
       component: Approval
     },
     {
-      path: '/approvalpersonalinfolist/:month',
+      path: '/approvalpersonalinfolist',
       name: 'ApprovalPersonalInfoList',
       component: ApprovalPersonalInfoList
     },

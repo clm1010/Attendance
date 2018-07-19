@@ -293,14 +293,19 @@ export default {
     },
     // 处理表格点击详情事件
     handleClickEventDetails (pars) {
+      console.log(pars.month)
       if (pars.type === 'details') {
         // sessionStorage.setItem('month', this.monthValue)
-        this.$router.push({
-          name: 'ApprovalPersonalInfoList',
-          params: {
-            month: pars.rowData.month
-          }
-        })
+        this.$store.dispatch('changeApprovalMonth', pars.rowData.month)
+        this.$store.dispatch('changeApprovalUserId', pars.rowData.user_id)
+        // this.$router.push({
+        //   name: 'ApprovalPersonalInfoList',
+        //   params: {
+        //     month: pars.rowData.month,
+        //     userId: pars.rowData.user_id
+        //   }
+        // })this.$router.push('/attendance')
+        this.$router.push('/approvalpersonalinfolist')
       }
       // // do delete operation
       // if (params.type === 'delete') {

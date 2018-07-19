@@ -26,7 +26,8 @@ Vue.use(VTable)
 Vue.use(VPagination)
 Vue.prototype.$common = common
 // Vue.prototype.baseUrl = 'http://172.16.253.9:8080/attence/webService/AttenceService?wsdl'
-Vue.prototype.baseUrl = 'http://172.16.135.103:8080/attence/webService/AttenceService?wsdl'
+// Vue.prototype.baseUrl = 'http://localhost:82/attence/webService/AttenceService?wsdl'
+Vue.prototype.baseUrl = 'http://timeapprove.pactera.com:82/attence/webService/AttenceService?wsdl'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

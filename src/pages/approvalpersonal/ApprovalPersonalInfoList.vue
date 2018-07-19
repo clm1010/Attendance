@@ -32,6 +32,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapState } from 'vuex'
 import axios from 'axios'
 import ApprovalPersonalHeader from './components/Header'
 export default {
@@ -113,8 +114,12 @@ export default {
   methods: {
     // 获取审批个人信息列表
     getApprovalPersonalInfoTableData () {
-      let userId = sessionStorage.getItem('user_id')
-      let month = this.$route.params.month
+      // let userId = sessionStorage.getItem('user_id')
+      // let userId = this.$route.params.userId
+      // let month = this.$route.params.month
+      let userId = this.approvalUserId
+      let month = this.approvalMonth
+      console.log(month, userId)
       try {
         if (month !== '' && userId !== '') {
           let postdata = `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:queryAttendanceDetailList xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><month type='String'>${month}</month></m:queryAttendanceDetailList></soap:Body></soap:Envelope>`
@@ -272,6 +277,9 @@ export default {
   },
   mounted () {
     this.getApprovalPersonalInfoTableData()
+  },
+  computed: {
+    ...mapState(['approvalMonth', 'approvalUserId'])
   }
 }
 

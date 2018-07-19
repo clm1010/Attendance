@@ -1,6 +1,8 @@
 let defaultTimesheetTitle = '添加工时'
 let defaultTimesheetDate = ''
 let defaultIsWorkday = true
+let defaultApprovalMonth = ''
+let defaultApprovalUserId = ''
 
 try {
   if (localStorage.timesheetTitle) {
@@ -12,10 +14,18 @@ try {
   if (localStorage.timesheetIsWorkday) {
     defaultIsWorkday = localStorage.timesheetIsWorkday
   }
+  if (localStorage.approvalMonth) {
+    defaultApprovalMonth = localStorage.approvalMonth
+  }
+  if (localStorage.approvalUserId) {
+    defaultApprovalUserId = localStorage.approvalUserId
+  }
 } catch (e) {}
 
 export default {
   timesheetTitle: defaultTimesheetTitle,
   timesheetDate: defaultTimesheetDate,
-  timesheetIsWorkday: defaultIsWorkday
+  timesheetIsWorkday: defaultIsWorkday,
+  approvalMonth: defaultApprovalMonth,
+  approvalUserId: defaultApprovalUserId
 }

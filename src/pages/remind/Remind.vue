@@ -65,18 +65,24 @@ export default {
     },
     // 处理初始设置提醒类型响应设置
     handleInitPostSettingRemindRes (res) {
-      console.log(res)
+      // console.log(res)
       try {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
             let handleData = (new Function('return' + sliceData))()
-            if (!this.$common.isEmptyObject(handleData.push_type)) {
+            // console.log(!this.$common.isEmptyObject(handleData.push_type))
+            // console.log(typeof handleData.push_type)
+            if (handleData.push_type == 'null') {
               this.remind = '1'
-            } else {
+            }
+            if (handleData.push_type === '1') {
+              this.remind = '1'
+            }
+            if (handleData.push_type === '2') {
               this.remind = '2'
             }
-            console.log(handleData.push_type)
+            // console.log(handleData.push_type)
           } else {
             console.log(sliceData)
           }
@@ -91,7 +97,7 @@ export default {
         let userId = sessionStorage.getItem('user_id')
         let userName = sessionStorage.getItem('user_name')
         if (userId && userName && this.remind) {
-          console.log(this.remind)
+          // console.log(this.remind)
           let postdata =
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:updateRemindType xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><user_name type='String'>${userName}</user_name><push_type>${this.remind}</push_type></m:updateRemindType></soap:Body></soap:Envelope>`
           axios({

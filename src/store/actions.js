@@ -7,5 +7,11 @@ export default {
   },
   changeTimesheetIsWorkday (ctx, timesheetIsWorkday) {
     ctx.commit('changeTimesheetIsWorkday', timesheetIsWorkday)
+  },
+  changeApprovalMonth (ctx, approvalMonth) {
+    ctx.commit('changeApprovalMonth', approvalMonth)
+  },
+  changeApprovalUserId (ctx, approvalUserId) {
+    ctx.commit('changeApprovalUserId', approvalUserId)
   }
 }
