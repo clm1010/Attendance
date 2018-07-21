@@ -11,7 +11,7 @@
             labelFloat
             fullWidth
             disabled
-          />
+          style="display:none"/>
           <mu-text-field
             v-model="personalDetailsObj.userName"
             hintText="姓名"

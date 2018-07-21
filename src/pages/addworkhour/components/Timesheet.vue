@@ -2,7 +2,7 @@
 <form ref="addForm" :modle="timesheetObj" class="formBody"  method="post">
   <mu-raised-button label="删除" class="isBtnDelete"  @click="handleDeleteTimesheetClick" primary/>
   <mu-card class="timesheet-card">
-    <div class="timesheet-panel">
+    <div class="timesheet-panel" style="display:none">
       <i class="material-icons">card_travel</i>
       <div class="timesheet-content">
         <label class="lbl-title">技术平台</label>
@@ -250,7 +250,7 @@ export default {
     },
     // 自定义处理项目
     defProject (pId, pName, checkId) {
-      console.log(pId, pName, checkId)
+      // console.log(pId, pName, checkId)
       this.projectType = pId
       this.timesheetObj.project_id = pId
       this.timesheetObj.project_name = pName
@@ -458,7 +458,7 @@ export default {
     },
     // 监听请假类型input事件
     handleAskleaveTypeInput () {
-      console.log(this.timesheetObj.askleave_type)
+      // console.log(this.timesheetObj.askleave_type)
     },
     handleDeleteTimesheetClick (event) {
       this.$emit('deleteTimesheet', event.target.offsetParent.parentNode)
@@ -472,7 +472,7 @@ export default {
     this.timesheetObj.date = this.currentDate
     this.timesheetObj.user_id = sessionStorage.getItem('user_id')
     this.timesheetObj.user_name = sessionStorage.getItem('user_name')
-    console.log('被创建')
+    // console.log('被创建')
   },
   computed: {
     ...mapState(['timesheetTitle', 'timesheetDate', 'timesheetIsWorkday'])

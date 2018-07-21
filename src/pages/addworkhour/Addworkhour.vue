@@ -28,6 +28,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mapState } from 'vuex'
 import axios from 'axios'
 import AddworkhoureTimesheet from './components/Timesheet'
@@ -72,7 +73,7 @@ export default {
       // axios.get('../../attendance/mock/timesheet.json').then(this.handleGetUpdateTimesheet)
     },
     handleGetUpdateTimesheet (res) {
-      console.log(res)
+      // console.log(res)
       try {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
@@ -80,10 +81,10 @@ export default {
             let handleData = (new Function('return' + sliceData))()
             let result = handleData.rows
             for (let i = 0; i < result.length; i++) {
-              console.log(result)
+              // console.log(result)
               this.handleAddTimesheet('AddworkhoureTimesheet')
               this.updateData = result
-              console.log(this.updateData)
+              // console.log(this.updateData)
               this.$nextTick(function () {
                 this.updateForm()
               })
@@ -123,7 +124,7 @@ export default {
           // tempworkstate.push(this.$refs.addTimesheet[i].timesheetObj.workstate_type)
         }
         // console.log(temporary)
-        if ((new Set(temporary)).size != temporary.length){
+        if ((new Set(temporary)).size != temporary.length) {
           // alert("数组有重复值")
           verifyFalg = false
           this.toast = true
@@ -176,7 +177,7 @@ export default {
         verifyFalg = false
         return false
       }
-      console.log(verifyFalg)
+      // console.log(verifyFalg)
       return verifyFalg
     },
     // 加班工时合计 不能超过3小时
@@ -297,8 +298,8 @@ export default {
     },
     // 提交全部工时表单
     handleSubmit () {
-      console.log('提交全部工时表单')
-      console.log(this.addTimesheetList.length)
+      // console.log('提交全部工时表单')
+      // console.log(this.addTimesheetList.length)
       try {
         this.submitAllTimesheetList = []
         if (this.verifyProjectWorkStatus() && this.verifyNormalAskleave() && this.verifyIsKoNormalTime() && this.verifyOvertime() && this.verifyIsKoOverworkTime() && this.verifyHolidayOvertime() && this.verifyHolidayOvertimeExceed11() && this.verifyIsEmpty()) {
@@ -312,11 +313,11 @@ export default {
       }
     },
     handlePOSTSubmit (data) {
-      console.log(JSON.stringify(data))
+      // console.log(JSON.stringify(data))
       try {
         let userId = sessionStorage.getItem('user_id')
         if (userId && data != null) {
-          console.log(JSON.stringify(data))
+          // console.log(JSON.stringify(data))
           let dataStr = JSON.stringify(data)
           let postdata =
             `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><m:saveAttendance xmlns:m='http://webservice.attence.com/'><user_id type='String'>${userId}</user_id><date type='String'>${this.currentDate}</date><dataStr>${dataStr}</dataStr></m:saveAttendance></soap:Body></soap:Envelope>`
@@ -339,7 +340,7 @@ export default {
       // this.$router.push('/attendance')
     },
     handleGetPOSTSubmitInfo (res) {
-      console.log(res)
+      // console.log(res)
       this.$router.push('/attendance')
     },
     hideToast () {
@@ -347,7 +348,7 @@ export default {
       if (this.toastTimer) clearTimeout(this.toastTimer)
     },
     updateForm () {
-      console.log('更新')
+      // console.log('更新')
       if (this.updateData.length !== 0) {
         try {
           // console.log(JSON.stringify(this.updateData))
@@ -360,7 +361,7 @@ export default {
           for (let j = 0; j < this.addTimesheetList.length; j++) {
             // this.$refs.addTimesheet[j].$el.className += ' updateForm'
             this.$refs.addTimesheet[j].$el[0].style.display = 'none'
-            console.log(this.updateData[j].check_status)
+            // console.log(this.updateData[j].check_status)
             if (this.updateData[j].check_status === '1' || this.updateData[j].check_status === '2') {
               this.$refs.addTimesheet[j].$el[1].disabled = 'disabled'
               this.$refs.addTimesheet[j].$el[2].disabled = 'disabled'
@@ -385,7 +386,7 @@ export default {
     this.currentDate = this.timesheetDate
     if (this.timesheetTitle === '添加工时') {
       this.handleAddTimesheet('AddworkhoureTimesheet')
-      console.log(1)
+      // console.log(1)
     }
     if (this.timesheetTitle === '修改工时') {
       this.getAjaxUpdateTimesheet()
