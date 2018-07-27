@@ -66,15 +66,15 @@ export default {
         if (res.data.indexOf('<String>') !== -1) {
           let sliceData = res.data.slice((res.data.indexOf('<String>') + 8), res.data.lastIndexOf('</String>'))
           if (sliceData) {
-            let handleData = (new Function('return' + sliceData))()
-            // let handleData = {
-            //   'errcode': 0,
-            //   'errmsg': 'ok',
-            //   'UserId': 'P9026557',
-            //   'DeviceId': 'DEVICEID',
-            //   'user_ticket': 'USER_TICKET',
-            //   'expires_in': 7200
-            // }
+            // let handleData = (new Function('return' + sliceData))()
+            let handleData = {
+              'errcode': 0,
+              'errmsg': 'ok',
+              'UserId': 'P0065289',
+              'DeviceId': 'DEVICEID',
+              'user_ticket': 'USER_TICKET',
+              'expires_in': 7200
+            }
             // this.getQueryUserInfoFor()
             // window.alert(JSON.stringify(handleData))
             if (handleData.UserId === '') {
@@ -94,7 +94,7 @@ export default {
     },
     // 获取员工信息
     getQueryUserInfoFor (resData) {
-      // console.log(resData)
+      console.log(resData)
       try {
         let pid = resData.UserId
         if (pid) {

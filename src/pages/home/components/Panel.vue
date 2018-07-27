@@ -27,7 +27,7 @@ export default {
       }, {
         id: '003',
         image: require('@/assets/img/tx.png'),
-        title: '提醒',
+        title: '提醒设置',
         path: '/remind'
       }, {
         id: '004',
